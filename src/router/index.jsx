@@ -9,10 +9,8 @@ import PostPage from "../pages/Post";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function AuthLayout  ()  {
-    return (
-        
+    return ( 
         <Outlet/>
-       
     );
 }
 
