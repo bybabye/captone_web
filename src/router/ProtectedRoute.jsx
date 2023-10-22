@@ -1,12 +1,14 @@
 
 
-import {Outlet} from 'react-router-dom'
+import {Outlet,Navigate} from 'react-router-dom'
 
+
+// kiểm tra nếu token trong localStorage bằng null thì cho về login
 function ProtectedRoute ()  {
-    // const navigate = useNavigate();
-    // if (!localStorage.getItem('accessToken')) {
-    //     return <Navigate to='/login' />;
-    //   }
+   
+    if (!localStorage.getItem('accessToken')) {
+        return <Navigate to='/login' />;
+    }
 
     return (
         <Outlet/>
