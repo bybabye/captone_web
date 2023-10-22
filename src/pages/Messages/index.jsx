@@ -1,4 +1,50 @@
+import { useContext, useEffect, useState } from "react";
+import "./styles.css";
+import { apiRequest } from "../../utils/request";
+import { API_SERVER_LIST_CHAT } from "../../utils/contants";
+import { AuthContext } from "../../context/AuthProvider";
+
 export default function Messages() {
+  
+  
+  const [chats,setChats] = useState([]);
+  const {user} = useContext(AuthContext);
+  console.log(user);
+
+
+  const handleListChat = async() => {
+    const {data} = await apiRequest(null,"GET",API_SERVER_LIST_CHAT,localStorage.getItem("accessToken"))
+    console.log(data);
+    setChats(data)
+  }
+
+  useEffect(() => {
+    handleListChat()
+  },[])
+
+
+
+
+  const itemChat = (avatar,name,status,id) => {
+    return (
+      <div key={id}>
+        <li className="clearfix">
+          <img
+            src={`${avatar}`}
+            alt="avatar"
+          />
+          <div className="about">
+            <div className="name">{name}</div>
+            <div className="status">
+              {" "}
+              <i className="fa fa-circle offline" /> {status}
+            </div>
+          </div>
+        </li>
+      </div>
+    );
+  };
+
   return (
     <div className="container">
       <div className="row clearfix">
@@ -18,58 +64,12 @@ export default function Messages() {
                 </div>
               </div>
               <ul className="list-unstyled chat-list mt-2 mb-0">
-                <li className="clearfix">
-                  <img
-                    src="https://i.pinimg.com/736x/55/0f/49/550f49a459548599a5a4ea1c67fc0244.jpg"
-                    alt="avatar"
-                  />
-                  <div className="about">
-                    <div className="name">Huy Bui</div>
-                    <div className="status">
-                      {" "}
-                      <i className="fa fa-circle offline" /> left 10 mins ago{" "}
-                    </div>
-                  </div>
-                </li>
-                <li className="clearfix active">
-                  <img
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8badsDMPfpXtrlr52FeQfbB9Fh0xEoofU908LO3ykBFVnRt5C_Dn1_bK511K6P9Rx9pw&usqp=CAU"
-                    alt="avatar"
-                  />
-                  <div className="about">
-                    <div className="name">Linh Tran</div>
-                    <div className="status">
-                      {" "}
-                      <i className="fa fa-circle online" /> online{" "}
-                    </div>
-                  </div>
-                </li>
-                <li className="clearfix">
-                  <img
-                    src="https://cdn-icons-png.flaticon.com/512/147/147144.png"
-                    alt="avatar"
-                  />
-                  <div className="about">
-                    <div className="name">Thinh Nguyen</div>
-                    <div className="status">
-                      {" "}
-                      <i className="fa fa-circle online" /> online{" "}
-                    </div>
-                  </div>
-                </li>
-                <li className="clearfix">
-                  <img
-                    src="https://www.w3schools.com/howto/img_avatar.png"
-                    alt="avatar"
-                  />
-                  <div className="about">
-                    <div className="name">Thinh Minh</div>
-                    <div className="status">
-                      {" "}
-                      <i className="fa fa-circle offline" /> left 10 hours ago{" "}
-                    </div>
-                  </div>
-                </li>
+               {chats.map(chat => {
+                const users = chat.membersId.find(e => e._id !== user._id)
+                console.log(users);
+                return itemChat(users.avatar,users.userName,"aloi",users._id)
+               })}
+               
               </ul>
             </div>
             <div className="chat">

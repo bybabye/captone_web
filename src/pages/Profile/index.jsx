@@ -12,7 +12,6 @@ export default function ProfilePage() {
                 src="https://bootdey.com/img/Content/avatar/avatar7.png"
                 alt=""
               />
-
               <button className="btn btn-primary" type="button">
                 Upload new image
               </button>
