@@ -7,6 +7,7 @@ import ProfilePage from "../pages/Profile";
 import PostPage from "../pages/Post";
 import AuthProvider from "../context/AuthProvider";
 import Messages from "../pages/Messages";
+import Chat from "../components/chat";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function AuthLayout() {
@@ -28,6 +29,10 @@ export default createBrowserRouter([
         path: "/login",
       },
       {
+        element: <HomePage />,
+        path: "/",
+      },
+      {
         element: <ProtectedRoute />,
         path: "/",
         children: [
@@ -42,6 +47,12 @@ export default createBrowserRouter([
           {
             element: <Messages/>,
             path: "/message",
+            children : [
+              {
+                element : <Chat/>,
+                path: "chat/:messId"
+              }
+            ]
           },
           {
             element: <PostPage />,
@@ -51,8 +62,5 @@ export default createBrowserRouter([
       },
     ],
   },
-  {
-    element: <HomePage />,
-    path: "/home",
-  },
+  
 ]);

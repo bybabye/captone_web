@@ -1,29 +1,209 @@
-import { getAuth, signOut } from "firebase/auth";
-import app from "../../firebase/config";
-import { useContext } from "react";
-import { AuthContext } from "../../context/AuthProvider";
+import { useEffect, useState } from "react";
+import styles from "./styles.module.css";
+import { apiRequest } from "../../utils/request";
+import {
+  API_SERVER_LIST_HOME,
+  API_SERVER_SEARCH_FOR_ADDRESS,
+  API_SERVER_SEARCH_FOR_ROOMTYPE,
+} from "../../utils/contants";
+import CustomCard from "../../components/CustomCard";
+import logo from "../../assets/logo.png";
+import Dropdown from "../../components/CustomDropdown";
+import {
+  BiSearchAlt,
+  BiMessageRounded,
+  BiUserCircle,
+  BiHomeAlt2,
+} from "react-icons/bi";
+import { GrNotification } from "react-icons/gr";
+import { MdPostAdd ,MdApartment } from "react-icons/md";
+import { IoHomeOutline } from "react-icons/io5";
+
 
 export default function HomePage() {
-  const auth = getAuth(app);
-  const data = useContext(AuthContext);
-  console.log(data);
-  const handleLogout = async () => {
-    console.log("da log out");
+  const [homes, setHomes] = useState([]);
+  const [address, setAddress] = useState([]);
+  const [postAddress, setPostAddress] = useState({});
+  const [indexAddress, setIndexAddress] = useState(0);
+  const [indexDistrict, setIndexDistrict] = useState(0);
+  const [indexSubDistrict, setIndexSubDistrict] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  //const [page, setPage] = useState(1);
+
+  const handleGetHomesData = async () => {
+    setIsLoading(true);
+    const data = await apiRequest(null, "GET", API_SERVER_LIST_HOME, null);
     
-    signOut(auth)
-      .then(() => {
-        // Sign-out successful.
-      })
-      .catch((error) => {
-        // An error happened.
-        console.log(error);
-      });
-      localStorage.clear();
+    setHomes(data);
+    setIsLoading(false);
+  };
+
+  const getAddressData = async () => {
+    const response = await fetch("https://provinces.open-api.vn/api/?depth=3");
+    const jsonData = await response.json();
+
+    setAddress(jsonData);
+    setPostAddress({
+      city: jsonData[0].name,
+    });
+  };
+  const handleCutString = (inputString, searchString) => {
+    if (!inputString) return null;
+    let startIndex;
+    startIndex = inputString.indexOf(searchString);
+
+    const result = inputString
+      .substring(startIndex + searchString.length)
+      .trim();
+    return result;
+  };
+
+  const handleSearchHomeForAddress = async () => {
+    const json = {
+      city: handleCutString(postAddress.city, "Thành phố"),
+      districts: handleCutString(postAddress.districts, "Quận"),
+      subDistrict: handleCutString(postAddress.subDistrict, "Phường"),
+    };
+    console.log(json);
+    setIsLoading(true);
+    const data = await apiRequest(
+      null,
+      "GET",
+      `${API_SERVER_SEARCH_FOR_ADDRESS}?subDistrict=${
+        json.subDistrict ?? "undefined"
+      }&district=${json.districts ?? "undefined"}&city=${json.city}`,
+      null
+    );
+    
+    setHomes(data);
+    setIsLoading(false);
+  };
+  const handleSearchHomeForRoomType = async (roomType) => {
+    setIsLoading(true);
+
+    try {
+        const data = await apiRequest(
+            null,
+            "GET",
+            `${API_SERVER_SEARCH_FOR_ROOMTYPE}?roomType=${roomType}`,
+            null
+        );
+        
+        setHomes(data);
+    } catch (error) {
+        console.error("Lỗi khi tìm kiếm:", error);
+        // Xử lý lỗi ở đây (nếu cần)
+    } finally {
+        setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    handleGetHomesData();
+  }, []);
+
+  useEffect(() => {
+    getAddressData();
+  }, []);
+  const itemCircle = (icon, text, func) => {
+    return (
+      <div onClick={func} className={`${styles.item_circle}`}>
+        <div className={`${styles.item_circle_icon}`}>{icon}</div>
+        <p>{text}</p>
+      </div>
+    );
   };
 
   return (
-    <div>
-      <button onClick={handleLogout}>logout</button>
+    <div className={`${styles.wrapper}`}>
+      <div className={`${styles.menu}`}>
+        <img src={logo} alt="IHML logo" />
+        <div className={`${styles.menu_info}`}>
+          <div style={{ display: "flex" }}>
+            <Dropdown
+              values={address}
+              onSelect={(value) => {
+                setIndexAddress(value);
+                setPostAddress({
+                  city: address[value].name,
+                  districts: undefined,
+                  subDistrict: undefined,
+                });
+              }}
+            />
+
+            {address[indexAddress] && (
+              <Dropdown
+                values={address[indexAddress].districts}
+                onSelect={(value) => {
+                  setIndexDistrict(value);
+                  setPostAddress({
+                    city: address[indexAddress].name,
+                    districts:
+                      address[indexAddress].districts[value].name ?? "",
+                    subDistrict: undefined,
+                  });
+                }}
+              />
+            )}
+            {address[indexAddress] && (
+              <Dropdown
+                values={
+                  address[indexAddress].districts[indexDistrict].wards ?? []
+                }
+                onSelect={(value) => {
+                  setIndexSubDistrict(value);
+                  setPostAddress({
+                    city: address[indexAddress].name,
+                    districts:
+                      address[indexAddress].districts[indexDistrict].name ?? "",
+                    subDistrict:
+                      address[indexAddress].districts[indexDistrict].wards[
+                        value
+                      ].name ?? "",
+                  });
+                }}
+              />
+            )}
+            <button
+              className={`${styles.menu_info_button}`}
+              onClick={handleSearchHomeForAddress}
+            >
+              <BiSearchAlt color="#fff" />
+              <p>Tìm kiếm</p>
+            </button>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <GrNotification style={{ marginLeft: "24px" }} size={24} />
+            <BiMessageRounded style={{ marginLeft: "12px" }} size={26} />
+            <BiUserCircle
+              style={{ marginLeft: "12px", marginRight: "12px" }}
+              size={26}
+            />
+            <button
+              className={`${styles.menu_info_button}`}
+              onClick={handleSearchHomeForAddress}
+            >
+              <MdPostAdd color="#fff" />
+              <p>Đăng tin</p>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className={`${styles.content}`}>
+        <div className={`${styles.content_filter}`}>
+          {itemCircle(<BiHomeAlt2 size={28} />, "Nhà Trọ & Phòng Trọ", () =>
+            handleSearchHomeForRoomType(1)
+          )}
+          {itemCircle(<IoHomeOutline size={28} />, "Nhà Nguyên Căn",() =>
+            handleSearchHomeForRoomType(2)
+          )}
+          {itemCircle(<MdApartment size={28} />, "Chung Cư",() =>
+            handleSearchHomeForRoomType(3)
+          )}
+        </div>
+        {isLoading ? <div>Loading</div> : <CustomCard homes={homes} />}
+      </div>
     </div>
   );
 }

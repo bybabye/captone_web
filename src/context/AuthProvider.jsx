@@ -1,5 +1,4 @@
 import { createContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import { apiRequest } from "../utils/request";
 import { API_SERVER_LOGIN_USER } from "../utils/contants";
@@ -20,7 +19,6 @@ export default function AuthProvider({ children }) {
   // tạo biến loading khi user người dùng vừa vào trang
   const [isLoading, setIsLoading] = useState(false);
   // tạo biến navigate để di chuyển đến các router
-  const navigate = useNavigate();
   // tạo biến auth , getAuth là 1 hàm hỗ trợ kết nối tới firebase
   const auth = getAuth();
 
@@ -41,7 +39,6 @@ export default function AuthProvider({ children }) {
       setIsLoading(false);
       setUser({});
       localStorage.clear();
-      navigate("/login");
     });
     return () => {
       unsubcribed();

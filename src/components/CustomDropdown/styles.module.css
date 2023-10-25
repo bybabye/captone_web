@@ -1,0 +1,42 @@
+/* CSS for Dropdown Component */
+.dropdown_container {
+  width: 200px;
+  position: relative;
+  margin-right: 12px;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  font-size: 16px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+select:hover {
+  border-color: #007bff;
+}
+
+select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+/* Style the options in the dropdown */
+select option {
+  background-color: #fff;
+  color: #333;
+  font-size: 16px;
+  border-radius: 0;
+}
+
+/* Style the selected option */
+select option:checked {
+  background-color: #007bff;
+  color: #fff;
+}
