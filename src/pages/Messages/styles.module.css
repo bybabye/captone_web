@@ -1,0 +1,38 @@
+.wrapper {
+  height: 100vh;
+  width: 100%;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.chat {
+  height: 670px;
+  width: 769px;
+  border-radius: 12px;
+  border-color: #efefef;
+  border-width: 2px; /* Để xác định độ dày của đường viền */
+  border-style: solid;
+  display: flex;
+}
+.chat_list {
+  flex: 3;
+}
+.chat_info {
+  display: flex;
+  padding: 8px;
+  
+}
+.chat_info > img {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 24px;
+}
+.messages {
+  flex: 7;
+  border-left: 2px solid #efefef;
+ 
+  
+}

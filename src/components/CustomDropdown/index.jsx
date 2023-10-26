@@ -1,6 +1,6 @@
 import  { useState } from "react";
 import styles from "./styles.module.css";
-export default function Dropdown({ values, onSelect }) {
+export default function CustomDropdown({ values, onSelect }) {
   const [selectedValue, setSelectedValue] = useState("");
 
   const handleSelect = (value) => {
