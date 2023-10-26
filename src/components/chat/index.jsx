@@ -1,68 +1,131 @@
 import { useParams } from "react-router-dom";
-
+import styles from "./styles.module.css";
+import { useEffect, useRef, useState } from "react";
+import { apiRequest } from "../../utils/request";
+import {
+  API_SERVER_GET_GUEST_USER,
+  API_SERVER_GET_LIST_MESSAGES_FOR_ID,
+  API_SERVER_SEND_MESSAGE_FOR_ID,
+} from "../../utils/contants";
+import { GrSend } from "react-icons/gr";
 export default function Chat() {
   const { messId } = useParams();
+  const [messages, setMessages] = useState([]);
+  const messageListRef = useRef(null);
+  const [mess, setMess] = useState("");
+  const [guest, setGuest] = useState({});
   console.log(messId);
+
+  const handleGetGuestUser = async () => {
+    const { guest } = await apiRequest(
+      null,
+      "GET",
+      `${API_SERVER_GET_GUEST_USER}?chatId=${messId}`,
+      localStorage.getItem("accessToken")
+    );
+
+    console.log(guest);
+
+    setGuest(guest);
+  };
+
+  const handleGetMessage = async () => {
+    const { data } = await apiRequest(
+      null,
+      "GET",
+      `${API_SERVER_GET_LIST_MESSAGES_FOR_ID}?chatId=${messId}`,
+      localStorage.getItem("accessToken")
+    );
+
+    setMessages(data);
+  };
+  useEffect(() => {
+    handleGetGuestUser();
+    handleGetMessage();
+  }, []);
+
+
+
+  const handleAddMessageForChatId = async () => {
+    if (messages) {
+      const data = await apiRequest(
+        {
+          type: "text",
+          content: mess,
+        },
+        "POST",
+        `${API_SERVER_SEND_MESSAGE_FOR_ID}?chatId=${messId}`,
+        localStorage.getItem("accessToken")
+      );
+      console.log(data);
+    }
+  };
+  const addChatForEnter = async (e) => {
+    if (e.key === "Enter") {
+      await handleAddMessageForChatId();
+    }
+  };
+  useEffect(() => {
+    if (messageListRef.current) {
+      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+    }
+  }, [messages]);
   return (
-    <div className="chat">
-      <div className="chat-header clearfix">
-        <div className="row">
-          <div className="col-lg-6">
-            <a
-              href="javascript:void(0);"
-              data-toggle="modal"
-              data-target="#view_info"
-            >
-              <img
-                src="https://i.pinimg.com/736x/55/0f/49/550f49a459548599a5a4ea1c67fc0244.jpg"
-                alt="avatar"
-              />
-            </a>
-            <div className="chat-about">
-              <h5>Huy Bui</h5>
-            </div>
-          </div>
-        </div>
+    <div className={`${styles.wrapper}`}>
+      <div className={`${styles.info_user}`}>
+        <img src={guest.avatar} alt="avatar" />
+        <p>{guest.userName}</p>
       </div>
-      <div className="chat-history">
-        <ul className="m-b-0">
-          <li className="clearfix">
-            <div className="message-data text-right">
-              <span className="message-data-time">23:10, hôm qua</span>
-              <img
-                src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                alt="avatar"
-              />
+      <div ref={messageListRef} className={`${styles.messages}`}>
+        {messages.map((message) => {
+          return (
+            <div key={message._id}>
+              <div
+                style={{
+                  display: "flex",
+                  paddingBottom: "12px",
+                  flexDirection: "row",
+                  width: "100%",
+                  justifyContent: `${
+                    message.senderId === guest._id ? "flex-start" : "flex-end"
+                  }`,
+                }}
+              >
+                <div>
+                  <div
+                    style={{
+                      display: `${
+                        message.senderId === guest._id ? "flex" : ""
+                      }`,
+                    }}
+                    className={`${styles.message_guest}`}
+                  >
+                    {message.senderId === guest._id && (
+                      <img src={guest.avatar} alt="avatar" />
+                    )}
+                    <div className={`${styles.message_content}`}>
+                      {message.content}
+                    </div>
+                  </div>
+                  <div className={`${styles.message_sentTime}`}>
+                    {message.sentTime}
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="message other-message float-right"> Hi Huy? </div>
-          </li>
-          <li className="clearfix active text-center">Hôm nay</li>
-          <li className="clearfix">
-            <div className="message-data">
-              <span className="message-data-time">10:12, hôm nay</span>
-            </div>
-            <div className="message my-message">Hi</div>
-          </li>
-          <li className="clearfix">
-            <div className="message-data">
-              <span className="message-data-time">10:15, hôm nay</span>
-            </div>
-            <div className="message my-message">
-              Chỗ bạn còn trống phòng không?
-            </div>
-          </li>
-        </ul>
+          );
+        })}
       </div>
-      <div className="chat-message clearfix">
-        <div className="input-group mb-0">
-          <input type="text" className="form-control" placeholder="Type..." />
-          <div className="input-group-prepend">
-            <span className="input-group-text">
-              {" "}
-              Gửi <i className="fa fa-send" />
-            </span>
-          </div>
+
+      <div className={`${styles.send_mess}`}>
+        <div onClick={handleAddMessageForChatId} className={`${styles.send_mess_icon}`}>
+          <GrSend size={24} />
         </div>
+        <input
+          onKeyDown={(e) => addChatForEnter(e)}
+          value={mess}
+          onChange={(e) => setMess(e.target.value)}
+        />
       </div>
     </div>
   );

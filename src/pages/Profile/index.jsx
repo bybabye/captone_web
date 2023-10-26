@@ -1,16 +1,67 @@
+import { useContext, useState } from "react";
+import { AuthContext } from "../../context/AuthProvider";
+import { apiRequest } from "../../utils/request";
+import { API_SERVER_UPDATE_PERSONAL_PROFILE } from "../../utils/contants";
+import { useNavigate } from 'react-router-dom';
 export default function ProfilePage() {
+  const { user ,setUser} = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [userName, setUserName] = useState("");
+  const [address, setAddress] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [placeOfOrigin, setPlaceOfOrigin] = useState("");
+  const [placeOfResidence, setPlaceOfResidence] = useState("");
+  const [checkUserInput, setCheckUserInput] = useState(false);
+  const [dateOfBirth, setDateOfBirth] = useState(new Date());
+
+  const handleUpdateProfile = async () => {
+    try {
+      if (checkUserInput) {
+        const data = await apiRequest(
+          {
+            userName,
+            address,
+            phoneNumber,
+            fullName,
+            placeOfOrigin,
+            placeOfResidence,
+            dateOfBirth,
+          },
+          "PATCH",
+          API_SERVER_UPDATE_PERSONAL_PROFILE,
+          localStorage.getItem("accessToken")
+        );
+        console.log(data);
+        setUser(data.data);
+        navigate('/home/login=true');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleDateChange = (e) => {
+    const selectedDate = new Date(e.target.value);
+    setDateOfBirth(selectedDate);
+  };
   return (
-    <div className="container-xl px-4 mt-4">
+    <div style={{ height: "100vh" }} className="container-xl ">
       <hr className="mt-0 mb-4" />
       <div className="row">
         <div className="col-xl-4">
           <div className="card mb-4 mb-xl-0">
-            <div className="card-header">Profile Picture</div>
-            <div className="card-body text-center">
+            <div
+              style={{ border: "1px solid #efefef" }}
+              className="card-header bg-white"
+            >
+              Profile Picture
+            </div>
+            <div className="card-body text-center d-flex flex-column align-items-center">
               <img
+                style={{ height: "100px", width: "100px" }}
                 className="img-account-profile rounded-circle mb-2"
-                src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                alt=""
+                src={user.avatar}
+                alt="avatar"
               />
               <button className="btn btn-primary" type="button">
                 Upload new image
@@ -20,99 +71,155 @@ export default function ProfilePage() {
         </div>
         <div className="col-xl-8">
           <div className="card mb-4">
-            <div className="card-header">Edit Profile</div>
-            <div className="card-body">
+            <div
+              style={{ border: "1px solid #efefef" }}
+              className="card-header bg-white"
+            >
+              Edit Profile
+            </div>
+            <div className="card-body ">
               <br />
 
               <div className="mb-3">
                 <label>Tên nguời dùng</label>
                 <input
-                  className="form-control"
+                  className="form-control mt-2"
                   id="inputUsername"
                   type="text"
-                  placeholder="Nhập tên nguời dùng"
+                  placeholder={user.userName || ""}
+                  value={userName || ""}
+                  onFocus={() => {
+                    if (userName == "") setUserName(user.userName);
+                  }}
+                  onChange={(e) => {
+                    setCheckUserInput(true);
+                    setUserName(e.target.value);
+                  }}
                 />
               </div>
               <div className="mb-3">
                 <label>Địa chỉ</label>
                 <input
-                  className="form-control"
+                  className="form-control mt-2"
                   id="inputAddress"
                   type="text"
-                  placeholder="Nhập địa chỉ"
+                  placeholder={user.address || ""}
+                  value={address}
+                  onFocus={() => {
+                    if (address == "") setAddress(user.address);
+                  }}
+                  onChange={(e) => {
+                    setCheckUserInput(true);
+                    setAddress(e.target.value);
+                  }}
                 />
               </div>
               <div className="mb-3">
                 <label>Số điện thoại</label>
                 <input
-                  className="form-control"
+                  className="form-control mt-2"
                   id="inputPhone"
                   type="text"
-                  placeholder="Nhập số điện thoại"
+                  placeholder={user.phoneNumber || ""}
+                  value={phoneNumber || ""}
+                  onFocus={() => {
+                    if (phoneNumber == "") setPhoneNumber(user.phoneNumber);
+                  }}
+                  onChange={(e) => {
+                    setCheckUserInput(true);
+                    setPhoneNumber(e.target.value);
+                  }}
                 />
               </div>
               <span>CID</span>
               <br />
               <div className="row gx-3 mb-3">
                 <div className="col-md-6">
-                  <label>Họ</label>
+                  <label>Họ và Tên</label>
                   <input
-                    className="form-control"
+                    className="form-control mt-2"
                     id="inputFirstName"
                     type="text"
-                    placeholder="Nhập họ của bạn"
-                  />
-                </div>
-
-                <div className="col-md-6">
-                  <label>Tên</label>
-                  <input
-                    className="form-control"
-                    id="inputLastName"
-                    type="text"
-                    placeholder="Nhập tên của bạn"
+                    //placeholder={user.cID.fullName || ''}
+                    value={fullName || ""}
+                    onFocus={() => {
+                      if (fullName == "") setFullName(user.cID.fullName);
+                    }}
+                    onChange={(e) => {
+                      setCheckUserInput(true);
+                      setFullName(e.target.value);
+                    }}
                   />
                 </div>
               </div>
               <div className="mb-3">
                 <label>NO</label>
                 <input
-                  className="form-control"
+                  className="form-control mt-2"
                   id="inputNO"
                   type="text"
                   placeholder={12345678904}
+                  value={"***********"}
                 />
               </div>
               <div className="mb-3">
                 <label>Ngày sinh</label>
                 <input
-                  className="form-control date"
+                  className="form-control mt-2 date"
                   id="inputdate"
                   type="date"
+                
+                  value={dateOfBirth.toISOString().split("T")[0]} // Đảm bảo định dạng ngày tháng YYYY-MM-DD
+                  onChange={handleDateChange}
                 />
               </div>
               <div className="mb-3">
                 <label>Quê quán</label>
                 <input
-                  className="form-control"
+                  className="form-control mt-2"
                   id="inputhometown"
                   type="text"
-                  placeholder="Nhập quê quán"
+                  //  placeholder={user.cID.placeOfOrigin || ''}
+                  value={placeOfOrigin}
+                  onFocus={() => {
+                    if (placeOfOrigin == "")
+                      setPlaceOfOrigin(user.cID.placeOfOrigin);
+                  }}
+                  onChange={(e) => {
+                    setCheckUserInput(true);
+                    setPlaceOfOrigin(e.target.value);
+                  }}
                 />
               </div>
               <div className="mb-3">
                 <label>Nơi cư trú</label>
                 <input
-                  className="form-control"
+                  className="form-control mt-2"
                   id="inputresidence"
                   type="text"
                   name="Residence"
-                  placeholder="Nhập nơi cư trú"
+                  // placeholder={user.cID.placeOfResidence || ''}
+
+                  value={placeOfResidence}
+                  onFocus={() => {
+                    if (placeOfResidence == "")
+                      setPlaceOfResidence(user.cID.placeOfResidence);
+                  }}
+                  onChange={(e) => {
+                    setCheckUserInput(true);
+                    setPlaceOfResidence(e.target.value);
+                  }}
                 />
               </div>
             </div>
             <div className="col text-center">
-              <button className="btn btn-primary" type="button">
+              <button
+                onClick={handleUpdateProfile}
+                className={`btn ${
+                  checkUserInput ? "btn-primary" : "btn-secondary"
+                }  mb-4`}
+                type="button"
+              >
                 Cập nhật
               </button>{" "}
             </div>

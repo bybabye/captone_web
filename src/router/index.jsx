@@ -8,6 +8,7 @@ import PostPage from "../pages/Post";
 import AuthProvider from "../context/AuthProvider";
 import Messages from "../pages/Messages";
 import Chat from "../components/chat";
+import RegisterPage from "../pages/Register";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function AuthLayout() {
@@ -27,6 +28,10 @@ export default createBrowserRouter([
       {
         element: <LoginPage />,
         path: "/login",
+      },
+      {
+        element : <RegisterPage/>,
+        path: "/register"
       },
       {
         element: <HomePage />,

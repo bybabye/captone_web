@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styles from "./styles.module.css";
 import { apiRequest } from "../../utils/request";
+import Dropdown from "react-bootstrap/Dropdown";
 import {
   API_SERVER_LIST_HOME,
   API_SERVER_SEARCH_FOR_ADDRESS,
@@ -8,17 +9,25 @@ import {
 } from "../../utils/contants";
 import CustomCard from "../../components/CustomCard";
 import logo from "../../assets/logo.png";
-import Dropdown from "../../components/CustomDropdown";
+import CustomDropdown from "../../components/CustomDropdown";
 import {
   BiSearchAlt,
   BiMessageRounded,
   BiUserCircle,
   BiHomeAlt2,
+  BiLogOut
 } from "react-icons/bi";
-import { GrNotification } from "react-icons/gr";
-import { MdPostAdd ,MdApartment } from "react-icons/md";
-import { IoHomeOutline } from "react-icons/io5";
+import {
+  BsPersonGear
+} from "react-icons/bs";
 
+import { GrNotification } from "react-icons/gr";
+import { MdPostAdd, MdApartment } from "react-icons/md";
+import { IoHomeOutline } from "react-icons/io5";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthProvider";
+import app from "../../firebase/config";
+import { getAuth, signOut } from "firebase/auth";
 
 export default function HomePage() {
   const [homes, setHomes] = useState([]);
@@ -28,12 +37,22 @@ export default function HomePage() {
   const [indexDistrict, setIndexDistrict] = useState(0);
   const [indexSubDistrict, setIndexSubDistrict] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const auth = getAuth(app);
+  const navigate = useNavigate();
+
+  //user khi da dang nhap
+  const { user } = useContext(AuthContext);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   //const [page, setPage] = useState(1);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   const handleGetHomesData = async () => {
     setIsLoading(true);
     const data = await apiRequest(null, "GET", API_SERVER_LIST_HOME, null);
-    
+
     setHomes(data);
     setIsLoading(false);
   };
@@ -74,7 +93,7 @@ export default function HomePage() {
       }&district=${json.districts ?? "undefined"}&city=${json.city}`,
       null
     );
-    
+
     setHomes(data);
     setIsLoading(false);
   };
@@ -82,21 +101,26 @@ export default function HomePage() {
     setIsLoading(true);
 
     try {
-        const data = await apiRequest(
-            null,
-            "GET",
-            `${API_SERVER_SEARCH_FOR_ROOMTYPE}?roomType=${roomType}`,
-            null
-        );
-        
-        setHomes(data);
+      const data = await apiRequest(
+        null,
+        "GET",
+        `${API_SERVER_SEARCH_FOR_ROOMTYPE}?roomType=${roomType}`,
+        null
+      );
+
+      setHomes(data);
     } catch (error) {
-        console.error("Lỗi khi tìm kiếm:", error);
-        // Xử lý lỗi ở đây (nếu cần)
+      console.error("Lỗi khi tìm kiếm:", error);
+      // Xử lý lỗi ở đây (nếu cần)
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
   };
+  const handleLogout = async () => {
+    await signOut(auth);
+    navigate('/');
+  }
+
   useEffect(() => {
     handleGetHomesData();
   }, []);
@@ -119,7 +143,7 @@ export default function HomePage() {
         <img src={logo} alt="IHML logo" />
         <div className={`${styles.menu_info}`}>
           <div style={{ display: "flex" }}>
-            <Dropdown
+            <CustomDropdown
               values={address}
               onSelect={(value) => {
                 setIndexAddress(value);
@@ -132,7 +156,7 @@ export default function HomePage() {
             />
 
             {address[indexAddress] && (
-              <Dropdown
+              <CustomDropdown
                 values={address[indexAddress].districts}
                 onSelect={(value) => {
                   setIndexDistrict(value);
@@ -146,7 +170,7 @@ export default function HomePage() {
               />
             )}
             {address[indexAddress] && (
-              <Dropdown
+              <CustomDropdown
                 values={
                   address[indexAddress].districts[indexDistrict].wards ?? []
                 }
@@ -175,11 +199,32 @@ export default function HomePage() {
 
           <div style={{ display: "flex", alignItems: "center" }}>
             <GrNotification style={{ marginLeft: "24px" }} size={24} />
-            <BiMessageRounded style={{ marginLeft: "12px" }} size={26} />
-            <BiUserCircle
-              style={{ marginLeft: "12px", marginRight: "12px" }}
-              size={26}
-            />
+            <Link to={`/message`}>
+              <BiMessageRounded style={{ marginLeft: "12px" }} size={26} />
+            </Link>
+            {user._id != null ? (
+              <Dropdown show={isMenuOpen} onToggle={toggleMenu}>
+                <img onClick={toggleMenu} className={`${styles.user_img}`} src={user.avatar} alt="avatar" />
+                <Dropdown.Menu>
+                  <Dropdown.Item href="/profile">
+                  
+                  <BsPersonGear style={{marginRight : "6px"}} fontSize={16}/>
+                    View Personal</Dropdown.Item>
+                  <Dropdown.Item href="#" onClick={handleLogout}>
+                    <BiLogOut style={{marginRight : "6px"}} fontSize={16}/>
+                    Logout
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            ) : (
+              <Link to={`/login`}>
+              <BiUserCircle
+                style={{ marginLeft: "12px", marginRight: "12px" }}
+                size={26}
+              />
+              </Link>
+            )}
+
             <button
               className={`${styles.menu_info_button}`}
               onClick={handleSearchHomeForAddress}
@@ -195,10 +240,10 @@ export default function HomePage() {
           {itemCircle(<BiHomeAlt2 size={28} />, "Nhà Trọ & Phòng Trọ", () =>
             handleSearchHomeForRoomType(1)
           )}
-          {itemCircle(<IoHomeOutline size={28} />, "Nhà Nguyên Căn",() =>
+          {itemCircle(<IoHomeOutline size={28} />, "Nhà Nguyên Căn", () =>
             handleSearchHomeForRoomType(2)
           )}
-          {itemCircle(<MdApartment size={28} />, "Chung Cư",() =>
+          {itemCircle(<MdApartment size={28} />, "Chung Cư", () =>
             handleSearchHomeForRoomType(3)
           )}
         </div>
