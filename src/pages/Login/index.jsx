@@ -44,7 +44,6 @@ export default function LoginPage() {
       console.log(error);
     }
   };
-
   const handleLoginWithGmailAndPassword = async (event) => {
     event.preventDefault();
     if (checkInputUser) {
