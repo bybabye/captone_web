@@ -6,6 +6,7 @@ import { AuthContext } from "../../context/AuthProvider";
 import { Link, Outlet } from "react-router-dom";
 import styles from "./styles.module.css";
 import Header from "../../components/Header";
+import SocketProvider from "../../context/socketProvider";
 
 export default function Messages() {
   const [chats, setChats] = useState([]);
@@ -29,6 +30,8 @@ export default function Messages() {
   }, []);
 
   return (
+    <SocketProvider  >
+
     <div className={`${styles.wrapper}`}>
       <Header user={user}/>
       <div className={`${styles.chat}`}>
@@ -58,5 +61,6 @@ export default function Messages() {
         </div>
       </div>
     </div>
+    </SocketProvider>
   );
 }
