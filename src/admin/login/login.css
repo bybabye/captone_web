@@ -1,0 +1,105 @@
+.wrapper {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.layout {
+    width: 400px; 
+    background: #fff;
+    border: 1px solid #dddfe2;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    margin: 0 auto; /* Căn giữa form */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.layout h1 {
+    font-size: 24px; /* Adjust the font size to your preference */
+}
+
+.layout p {
+    text-align: left; /* Align text to the left */
+    margin: 0; /* Reset margin for <p> elements */
+    padding: 0.5rem 0.75rem;
+    width: 100%;
+    margin-top: 10px;
+    font-size: 12px;
+}
+
+.layout > input {
+    border-radius: 8px;
+    border: 2px solid #dddfe2;
+    outline: none;
+    color: #1d2129;
+    margin: 0px 0px;
+    padding: 0.5rem 0.75rem;
+    width: 100%;
+    font-size: 12px;
+}
+
+.layout h6{
+    font-size: 12px;
+    padding-top: 50px;
+    padding-bottom: 10px;
+}
+.unactive {
+    background-color: #efefef;
+}
+
+.layout > .button {
+    width: 70%;
+    color: #fff;
+    outline: none;
+    padding-top: 13px;
+    padding-bottom: 8px;
+    background: #1877f2;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.layout > .button h5{
+    display: flex; /* Sử dụng flexbox để xếp cạnh nhau */
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+}
+
+.social_buttons {
+    padding-top: -3px;
+    display: flex; /* Sử dụng flexbox để xếp cạnh nhau */
+
+    justify-content: center; /* Canh giữa theo chiều ngang */
+    margin-top: 1rem;
+}
+
+
+.layout .social-buttons .google-button,
+.layout .social-buttons .facebook-button {
+    cursor: pointer; 
+    background-color: transparent;
+    border: none; 
+    display: flex; 
+    align-items: center;
+    padding: 5px; 
+}
+
+.google_button img,
+.facebook_button img {
+    width: 32px; /* Điều chỉnh kích thước của biểu tượng */
+    height: 32px;
+    margin-right: 10px; /* Khoảng cách giữa biểu tượng và nút */
+}
+
+.google_button img:hover,
+.facebook_button img:hover{
+    transform: scale(1.1); 
+    cursor: pointer;
+}

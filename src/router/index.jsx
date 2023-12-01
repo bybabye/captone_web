@@ -9,6 +9,13 @@ import AuthProvider from "../context/AuthProvider";
 import Messages from "../pages/Messages";
 import Chat from "../components/chat";
 import RegisterPage from "../pages/Register";
+import NotFound from "../router/notfound";
+import Home from "../admin/Home/Home";
+import User from "../admin/User/User";
+import Report from "../admin/Report/Report";
+// import Host from "../admin/Host/Host";
+
+import Block from "../admin/Block/Block";
 
 import DescriptionPage from "../pages/Description";
 
@@ -18,7 +25,7 @@ export function AuthLayout() {
     <AuthProvider>
       <Outlet />
     </AuthProvider>
-  )
+  );
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -32,8 +39,8 @@ export default createBrowserRouter([
         path: "/login",
       },
       {
-        element : <RegisterPage/>,
-        path: "/register"
+        element: <RegisterPage />,
+        path: "/register",
       },
       {
         element: <HomePage />,
@@ -57,22 +64,42 @@ export default createBrowserRouter([
             path: "/profile",
           },
           {
-            element: <Messages/>,
+            element: <Messages />,
             path: "/message",
-            children : [
+            children: [
               {
-                element : <Chat/>,
-                path: "chat/:messId"
-              }
-            ]
+                element: <Chat />,
+                path: "chat/:messId",
+              },
+            ],
           },
           {
             element: <PostPage />,
             path: "/post",
           },
+          {
+            element: <NotFound />,
+            path: "*",
+          },
         ],
+      },
+      {
+        element: <Home />,
+        path: "/admin",
+      },
+
+      {
+        element: <Report />,
+        path: "/admin/report",
+      },
+      {
+        element: <User />,
+        path: "/admin/user",
+      },
+      {
+        element: <Block />,
+        path: "/admin/block",
       },
     ],
   },
-  
 ]);

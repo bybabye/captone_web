@@ -9,7 +9,7 @@ import { getAuth, signOut } from "firebase/auth";
 import { useState } from "react";
 import { BsPersonGear } from "react-icons/bs";
 
-export default function Header({user}) {
+export default function Header({ user }) {
   const auth = getAuth(app);
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,16 +24,16 @@ export default function Header({user}) {
     <div className={`${styles.menu}`}>
       <img src={logo} alt="IHML logo" />
       <div className={`${styles.menu_info}`}>
-        <div style={{display : 'flex'}}>
-
-            <div className={`${styles.link}`}><Link
-            to={`/`}
-            >Trang chủ</Link></div>
-            <div className={`${styles.link}`}><Link>Liên hệ</Link></div>
+        <div style={{ display: "flex" }}>
+          <div className={`${styles.link}`}>
+            <Link to={`/`}>Trang chủ</Link>
+          </div>
+          <div className={`${styles.link}`}>
+            <Link>Liên hệ</Link>
+          </div>
         </div>
         <div style={{ display: "flex", alignItems: "center" }}>
-          
-          { user && user._id != null ? (
+          {user && user._id != null ? (
             <Dropdown show={isMenuOpen} onToggle={toggleMenu}>
               <img
                 onClick={toggleMenu}
