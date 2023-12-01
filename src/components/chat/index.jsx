@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import styles from "./styles.module.css";
-import { useEffect, useRef, useState } from "react";
+import {  useContext, useEffect, useRef, useState } from "react";
 import { apiRequest } from "../../utils/request";
 import {
   API_SERVER_GET_GUEST_USER,
@@ -8,14 +8,22 @@ import {
   API_SERVER_SEND_MESSAGE_FOR_ID,
 } from "../../utils/contants";
 import { GrSend } from "react-icons/gr";
+import { SocketContext } from "../../context/socketProvider";
+import { AuthContext } from "../../context/AuthProvider";
+import { v4 as uuidv4 } from 'uuid';
 export default function Chat() {
+  
   const { messId } = useParams();
+  const [isLoading,setIsLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const messageListRef = useRef(null);
   const [mess, setMess] = useState("");
   const [guest, setGuest] = useState({});
-  console.log(messId);
-
+  const socket = useContext(SocketContext)
+  const { user } =  useContext(AuthContext);
+  
+  
+  // lấy user trên thanh menu gồm avatar , name
   const handleGetGuestUser = async () => {
     const { guest } = await apiRequest(
       null,
@@ -29,27 +37,70 @@ export default function Chat() {
     setGuest(guest);
   };
 
+  // lấy đoạn chat trong database
+ 
   const handleGetMessage = async () => {
-    const { data } = await apiRequest(
-      null,
-      "GET",
-      `${API_SERVER_GET_LIST_MESSAGES_FOR_ID}?chatId=${messId}`,
-      localStorage.getItem("accessToken")
-    );
-
-    setMessages(data);
+    
+    try {
+      setIsLoading(true)
+      console.log(isLoading);
+      const { data } = await apiRequest(
+        null,
+        "GET",
+        `${API_SERVER_GET_LIST_MESSAGES_FOR_ID}?chatId=${messId}`,
+        localStorage.getItem("accessToken")
+      );
+      setMessages(data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false)
+      console.log(isLoading);
+    }
   };
+
+  const sendMessageForSocket = (content,id) => {
+    socket.emit('send-message',{
+      'chatId': messId,
+      'message': {
+        mId : id,
+        type : 'text',
+        content : content,
+        senderId : user._id,
+        sendTime : Date(),
+        chatId : messId,
+      },
+    })
+  }
+
   useEffect(() => {
+    socket.on('chat-id',(data) => {
+      console.log(data);
+      setMessages(prevMessage => [...prevMessage,data.message])
+      console.log(messages);
+    })
+  },[])
+
+
+  useEffect(() => {
+    socket.emit('join-room', {
+      'chatId': messId,
+    });
+    
+
     handleGetGuestUser();
     handleGetMessage();
-  }, []);
+  }, [messId]);
 
 
 
   const handleAddMessageForChatId = async () => {
+    
     if (messages) {
+      const id = uuidv4();
       const data = await apiRequest(
         {
+          mId : id,
           type: "text",
           content: mess,
         },
@@ -57,12 +108,15 @@ export default function Chat() {
         `${API_SERVER_SEND_MESSAGE_FOR_ID}?chatId=${messId}`,
         localStorage.getItem("accessToken")
       );
+      console.log('da send');
+      sendMessageForSocket(mess,id)
       console.log(data);
     }
   };
   const addChatForEnter = async (e) => {
     if (e.key === "Enter") {
       await handleAddMessageForChatId();
+      setMess('')
     }
   };
   useEffect(() => {
@@ -70,7 +124,7 @@ export default function Chat() {
       messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
     }
   }, [messages]);
-  return (
+  return ( isLoading ? <div>Loading</div> : 
     <div className={`${styles.wrapper}`}>
       <div className={`${styles.info_user}`}>
         <img src={guest.avatar} alt="avatar" />
@@ -79,7 +133,7 @@ export default function Chat() {
       <div ref={messageListRef} className={`${styles.messages}`}>
         {messages.map((message) => {
           return (
-            <div key={message._id}>
+            <div key={message.messId}>
               <div
                 style={{
                   display: "flex",
@@ -87,7 +141,7 @@ export default function Chat() {
                   flexDirection: "row",
                   width: "100%",
                   justifyContent: `${
-                    message.senderId === guest._id ? "flex-start" : "flex-end"
+                    message.senderId !== user._id ? "flex-start" : "flex-end"
                   }`,
                 }}
               >
@@ -95,12 +149,12 @@ export default function Chat() {
                   <div
                     style={{
                       display: `${
-                        message.senderId === guest._id ? "flex" : ""
+                        message.senderId !== user._id ? "flex" : ""
                       }`,
                     }}
                     className={`${styles.message_guest}`}
                   >
-                    {message.senderId === guest._id && (
+                    {message.senderId !== user._id && (
                       <img src={guest.avatar} alt="avatar" />
                     )}
                     <div className={`${styles.message_content}`}>

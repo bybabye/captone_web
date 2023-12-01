@@ -17,6 +17,8 @@ import Report from "../admin/Report/Report";
 
 import Block from "../admin/Block/Block";
 
+import DescriptionPage from "../pages/Description";
+
 // eslint-disable-next-line react-refresh/only-export-components
 export function AuthLayout() {
   return (
@@ -44,6 +46,11 @@ export default createBrowserRouter([
         element: <HomePage />,
         path: "/",
       },
+      {
+        element : <DescriptionPage/>,
+        path: "/description"
+      }
+    ,
       {
         element: <ProtectedRoute />,
         path: "/",
