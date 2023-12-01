@@ -1,10 +1,10 @@
 import logo from "../images/logo.png";
-import "./Header.css";
+import styles from "./styles.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function Header() {
   return (
-    <div className="header">
+    <div className={`${styles.header}`}>
       <div className="d-flex justify-content-around bg-white">
         <div>
           <img src={logo} alt="" />

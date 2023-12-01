@@ -3,9 +3,9 @@ import Navbar from "../Navbar/Navbar";
 import { useEffect, useState } from "react";
 import Header from "../Header/Header";
 import axios from "axios";
+import { API_SERVER_LIST_USER } from "../../utils/contants";
 
-const API_SERVER = "https://cap1.onrender.com"; 
-const API_SERVER_LIST_USER = `${API_SERVER}/user/listUser`;
+
 function User() {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");

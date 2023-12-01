@@ -9,7 +9,7 @@ import AuthProvider from "../context/AuthProvider";
 import Messages from "../pages/Messages";
 import Chat from "../components/chat";
 import RegisterPage from "../pages/Register";
-import NotFound from "../router/notfound";
+
 import Home from "../admin/Home/Home";
 import User from "../admin/User/User";
 import Report from "../admin/Report/Report";
@@ -76,10 +76,6 @@ export default createBrowserRouter([
           {
             element: <PostPage />,
             path: "/post",
-          },
-          {
-            element: <NotFound />,
-            path: "*",
           },
         ],
       },
