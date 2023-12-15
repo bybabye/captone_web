@@ -21,7 +21,7 @@ export default function ProfilePage() {
   const handleUpdateProfile = async () => {
     try {
       if (checkUserInput) {
-        const data = await apiRequest(
+        const {status , data} = await apiRequest(
           {
             userName,
             address,

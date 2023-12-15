@@ -1,14 +1,26 @@
-body {
+.wrapper {
   background-color: aliceblue;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction:  column;
+  justify-content: center;
+  align-items: center;
 }
-.error_template {
-  padding: 40px 15px;
-  text-align: center;
+.error_image {
+ 
+  margin-bottom: 20px;
 }
 .error_actions {
   margin-top: 15px;
   margin-bottom: 15px;
+  
 }
-.error_actions .btn {
+.error_actions > a {
   margin-right: 10px;
+  color: white;
+  background-color: black;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: bold;
 }

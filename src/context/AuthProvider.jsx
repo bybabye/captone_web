@@ -27,8 +27,9 @@ export default function AuthProvider({ children }) {
     // Nếu người dùng đã đăng nhập lập tức get thông tin về và đăng nhập vào hệ thống
       if (user?.uid) {
         
-        const userApp = await apiRequest(null,"POST",API_SERVER_LOGIN_USER,user.accessToken);
-        setUser(userApp);
+        const {status , data} = await apiRequest(null,"POST",API_SERVER_LOGIN_USER,user.accessToken);
+        console.log(status,data);
+        setUser(data);
         if (user.accessToken !== localStorage.getItem("accessToken")) {
           localStorage.setItem("accessToken", user.accessToken);
           window.location.reload();

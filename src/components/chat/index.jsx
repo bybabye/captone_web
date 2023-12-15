@@ -25,7 +25,7 @@ export default function Chat() {
   
   // lấy user trên thanh menu gồm avatar , name
   const handleGetGuestUser = async () => {
-    const { guest } = await apiRequest(
+    const {status , data : guest } = await apiRequest(
       null,
       "GET",
       `${API_SERVER_GET_GUEST_USER}?chatId=${messId}`,
@@ -44,7 +44,7 @@ export default function Chat() {
     try {
       setIsLoading(true)
       console.log(isLoading);
-      const { data } = await apiRequest(
+      const {status , data } = await apiRequest(
         null,
         "GET",
         `${API_SERVER_GET_LIST_MESSAGES_FOR_ID}?chatId=${messId}`,
