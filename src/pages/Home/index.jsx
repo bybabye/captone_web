@@ -24,10 +24,11 @@ import {
 import { GrNotification } from "react-icons/gr";
 import { MdPostAdd, MdApartment } from "react-icons/md";
 import { IoHomeOutline } from "react-icons/io5";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Route, Router, Routes, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthProvider";
 import app from "../../firebase/config";
 import { getAuth, signOut } from "firebase/auth";
+import DescriptionPage from "../Description";
 
 export default function HomePage() {
   const [homes, setHomes] = useState([]);
