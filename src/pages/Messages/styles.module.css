@@ -1,28 +1,47 @@
+/* styles.module.css */
+
 .wrapper {
-  height: 100vh;
+  height: auto;
   width: 100%;
   background-color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1;
+  padding-top: 72px;
 }
+
 .chat {
   height: 670px;
   width: 769px;
   border-radius: 12px;
-  border-color: #efefef;
-  border-width: 2px; /* Để xác định độ dày của đường viền */
-  border-style: solid;
+  border: 2px solid #efefef;
+  /* Combined border shorthand */
   display: flex;
 }
+
 .chat_list {
   flex: 3;
 }
+
+.searchInput {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+  margin-bottom: 16px;
+}
+
 .chat_info {
   display: flex;
-  padding: 8px;
-  
+  padding: 12px;
+  /* Increased padding for better spacing */
+  cursor: pointer;
+  border-bottom: 1px solid #403c3c;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
 }
+
 .chat_info > img {
   height: 50px;
   width: 50px;
@@ -30,9 +49,24 @@
   object-fit: cover;
   margin-right: 24px;
 }
+
+.sender {
+  color: gray;
+  border: 1px solid gray;
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+
+.receiver {
+  color: rgb(62, 74, 148);
+  border: 1px solid rgb(62, 74, 148);
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+
 .messages {
   flex: 7;
   border-left: 2px solid #efefef;
- 
-  
 }

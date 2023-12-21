@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+
 import style from "./styles.module.css";
 import { apiRequest } from "../../utils/request";
 import Header from "../../components/Header"
@@ -7,13 +8,8 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import styles from "./styles.module.css";
 import { useNavigate } from "react-router-dom";
-
-
 /*https://cap1.onrender.com/home?postId=64fec5432cd31a07815c0aca */
-
 export default function DescriptionPage() {
-
-
     const [isLoading, setIsLoading] = useState(true)
     const [postList, setPostList] = useState({});
     const { _id } = useParams()
@@ -90,3 +86,4 @@ export default function DescriptionPage() {
         </>
     )
 };
+

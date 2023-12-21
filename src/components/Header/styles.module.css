@@ -1,18 +1,18 @@
 .menu {
     width: 100%;
     position: fixed;
-    height: 95px;
+    height: 72px;
     background-color: #fff;
     top: 0;
     right: 0;
     left: 0;
     display: flex;
-
     justify-content: center;
     align-items: center;
+    z-index: 100;
   }
   .menu > img {
-    height: 95px;
+    height: 78px;
     object-fit: cover;
   }
   .menu_info {

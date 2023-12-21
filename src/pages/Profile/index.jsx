@@ -2,7 +2,9 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthProvider";
 import { apiRequest } from "../../utils/request";
 import { API_SERVER_UPDATE_PERSONAL_PROFILE } from "../../utils/contants";
-import { useNavigate } from 'react-router-dom';
+import { Form, useNavigate } from 'react-router-dom';
+import styles from "../Profile/styles.module.css";
+import Header from "../../components/Header";
 export default function ProfilePage() {
   const { user ,setUser} = useContext(AuthContext);
   const navigate = useNavigate();
@@ -15,10 +17,11 @@ export default function ProfilePage() {
   const [checkUserInput, setCheckUserInput] = useState(false);
   const [dateOfBirth, setDateOfBirth] = useState(new Date());
 
+
   const handleUpdateProfile = async () => {
     try {
       if (checkUserInput) {
-        const data = await apiRequest(
+        const {status , data} = await apiRequest(
           {
             userName,
             address,
@@ -44,12 +47,17 @@ export default function ProfilePage() {
     const selectedDate = new Date(e.target.value);
     setDateOfBirth(selectedDate);
   };
-  return (
-    <div style={{ height: "100vh" }} className="container-xl ">
-      <hr className="mt-0 mb-4" />
+  
+  return ( 
+    <div className={`${styles.wrapper}`}>
+    <div className="row">
+    <Header user={user}/>
+    </div>
+    <div className="container-xl">
+      <div className="mt-5 mb-5">
       <div className="row">
         <div className="col-xl-4">
-          <div className="card mb-4 mb-xl-0">
+          <div className="card mb-5 ">
             <div
               style={{ border: "1px solid #efefef" }}
               className="card-header bg-white"
@@ -134,7 +142,7 @@ export default function ProfilePage() {
               <span>CID</span>
               <br />
               <div className="row gx-3 mb-3">
-                <div className="col-md-6">
+               <div className="mb-3">
                   <label>Họ và Tên</label>
                   <input
                     className="form-control mt-2"
@@ -218,14 +226,17 @@ export default function ProfilePage() {
                 className={`btn ${
                   checkUserInput ? "btn-primary" : "btn-secondary"
                 }  mb-4`}
-                type="button"
-              >
+                type="button">
                 Cập nhật
               </button>{" "}
-            </div>
+              </div>
           </div>
         </div>
-      </div>
-    </div>
+        </div>
+        </div>
+        </div>
+        </div>
+    
+
   );
 }

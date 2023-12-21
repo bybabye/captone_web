@@ -24,7 +24,10 @@ import {
 import { GrNotification } from "react-icons/gr";
 import { MdPostAdd, MdApartment } from "react-icons/md";
 import { IoHomeOutline } from "react-icons/io5";
-import { Link, Route, Router, Routes, useNavigate } from "react-router-dom";
+
+import { Link, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+
 import { AuthContext } from "../../context/AuthProvider";
 import app from "../../firebase/config";
 import { getAuth, signOut } from "firebase/auth";
@@ -49,10 +52,10 @@ export default function HomePage() {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-
+  
   const handleGetHomesData = async () => {
     setIsLoading(true);
-    const data = await apiRequest(null, "GET", API_SERVER_LIST_HOME, null);
+    const {status , data} = await apiRequest(null, "GET", API_SERVER_LIST_HOME, null);
 
     setHomes(data);
     setIsLoading(false);
@@ -86,7 +89,7 @@ export default function HomePage() {
     };
     console.log(json);
     setIsLoading(true);
-    const data = await apiRequest(
+    const {status ,data} = await apiRequest(
       null,
       "GET",
       `${API_SERVER_SEARCH_FOR_ADDRESS}?subDistrict=${
@@ -94,6 +97,7 @@ export default function HomePage() {
       }&district=${json.districts ?? "undefined"}&city=${json.city}`,
       null
     );
+     // Sử lý sự kiện khi status khác 200
 
     setHomes(data);
     setIsLoading(false);
@@ -102,12 +106,13 @@ export default function HomePage() {
     setIsLoading(true);
 
     try {
-      const data = await apiRequest(
+      const {status , data} = await apiRequest(
         null,
         "GET",
         `${API_SERVER_SEARCH_FOR_ROOMTYPE}?roomType=${roomType}`,
         null
       );
+      // Sử lý sự kiện khi status khác 200
 
       setHomes(data);
     } catch (error) {
@@ -123,12 +128,17 @@ export default function HomePage() {
   }
 
   useEffect(() => {
-    handleGetHomesData();
+    // handleGetHomesData();
   }, []);
 
   useEffect(() => {
     getAddressData();
   }, []);
+
+  if (user && user.roles === 'admin') {
+    return <Navigate to="/admin" />;
+  }
+
   const itemCircle = (icon, text, func) => {
     return (
       <div onClick={func} className={`${styles.item_circle}`}>
