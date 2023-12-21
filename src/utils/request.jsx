@@ -12,10 +12,9 @@ export const apiRequest = async (payload, method, link, token, options = {}) => 
 
   const res = await fetch(link, requestOptions);
   const data = await res.json();
-  if (!data){
-    return ({ message: "Internal Server Error" });
-  }else{
-      return data;
-  }
+  
+
+  return {status : res.status,data: data };
 
 };
+

@@ -1,7 +1,7 @@
 import { Outlet, createBrowserRouter } from "react-router-dom";
 import ErrorPage from "../pages/Error";
 import LoginPage from "../pages/Login";
-import ProtectedRoute from "./ProtectedRoute";
+import ProtectedRoute  from "./ProtectedRoute";
 import HomePage from "../pages/Home";
 import ProfilePage from "../pages/Profile";
 import PostPage from "../pages/Post";
@@ -10,14 +10,14 @@ import Messages from "../pages/Messages";
 import Chat from "../components/chat";
 import RegisterPage from "../pages/Register";
 
-import Home from "../admin/Home/Home";
-import User from "../admin/User/User";
-import Report from "../admin/Report/Report";
+
 
 // import Host from "../admin/Host/Host";
 
 import Block from "../admin/Block/Block";
-
+import Home from "../admin/Home/Home";
+import User from "../admin/User/User";
+import Report from "../admin/Report/Report";
 import DescriptionPage from "../pages/Description";
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -28,6 +28,7 @@ export function AuthLayout() {
     </AuthProvider>
   );
 }
+
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default createBrowserRouter([

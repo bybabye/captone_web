@@ -14,7 +14,7 @@ export default function Messages() {
   console.log(user);
 
   const handleListChat = async () => {
-    const { data } = await apiRequest(
+    const { status ,data } = await apiRequest(
       null,
       "GET",
       API_SERVER_LIST_CHAT,

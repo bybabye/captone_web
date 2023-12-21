@@ -3,6 +3,7 @@
 import {Outlet,Navigate} from 'react-router-dom'
 
 
+
 // kiểm tra nếu token trong localStorage bằng null thì cho về login
 function ProtectedRoute ()  {
    
@@ -15,4 +16,5 @@ function ProtectedRoute ()  {
     );
 }
 
-export default ProtectedRoute;
+
+export  default ProtectedRoute;
