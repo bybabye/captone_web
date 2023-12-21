@@ -1,0 +1,41 @@
+.sidebar {
+    width: 200px;
+    height: 100vh;
+    position: fixed;
+    padding-bottom: 100px;
+}
+
+.content {
+    overflow: auto;
+    margin-left: 205px;
+    width: 70%;
+    
+}
+.home{
+    margin-top: 150px;
+
+}
+
+.home .content .col-md-3 {
+    border: 2px solid white;
+}
+.tableWrapper {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+  }
+  
+  .rowWrapper {
+    display: flex;
+    align-items: center; 
+    margin-bottom: 10px; 
+  }
+  
+  .avatar {
+    
+    max-width: 100px; 
+    border-radius: 50%; 
+    margin-right: 10px; 
+  }
+  

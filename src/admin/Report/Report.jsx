@@ -34,13 +34,13 @@ function Report() {
             <thead>
               <tr>
                 <th>id</th>
-                <th className="col">Title</th>
+                <th className="col">Tiêu đề</th>
                 <th className="col">Objective</th>
-                <th className="col">Status</th>
-                <th className="col">homeId</th>
-                <th className="col">authorId</th>
-                <th className="col">createdAt</th>
-                <th className="col">updatedAt</th>
+                <th className="col">Trạng thái</th>
+                <th className="col">Home Id</th>
+                <th className="col">Người gửi</th>
+                <th className="col">Created</th>
+                <th className="col">Updated</th>
               </tr>
             </thead>
             <tbody>

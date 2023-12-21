@@ -1,4 +1,4 @@
-import logo from "../images/logo.png";
+import logo from "../../assets/logo.png";
 import styles from "./styles.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 

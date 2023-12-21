@@ -1,4 +1,4 @@
-import "./User.css";
+import styles from "../Styles.module.css";
 import Navbar from "../Navbar/Navbar";
 import { useEffect, useState } from "react";
 import Header from "../Header/Header";
@@ -19,13 +19,23 @@ function User() {
     }
   };
 
+  const handleBlockUser = async (userId) => {
+    try {
+      await axios.post(`${API_SERVER_LIST_USER}/${userId}`);
+      await fetchUsers();
+      console.log(`User with ID ${userId} blocked successfully.`);
+    } catch (error) {
+      console.error("Error blocking user", error);
+    }
+  };
+
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.get(
-        `${API_SERVER_LIST_USER}?partialUsername=${encodeURIComponent(searchTerm)}`
+        `${API_SERVER_LIST_USER}/search/${encodeURIComponent(searchTerm)}`
       );
-      setUsers(response.data.data);
+      setUsers(response.data.users);
     } catch (error) {
       console.error("Error fetching users", error);
     }
@@ -34,47 +44,53 @@ function User() {
   useEffect(() => {
     fetchUsers();
   }, []);
+
   return (
     <div>
       <Navbar />
-      <div className="content container">
+      <div className={`${styles.content} container`}>
         <div className="row">
           <Header />
         </div>
-
-        <div className="row" style={{ marginTop: "120px", marginLeft: "20px" }}>
+        <div className="row" style={{ marginTop: "20px" }}>
           <form
             className="d-flex"
             role="search"
-            style={{ width: "300px", marginLeft: "1000px" }}
+            style={{ width: "300px", marginLeft: "auto" }}
             onSubmit={handleSearch}
           >
             <input
-              className="form-control me-2"
+              className={`form-control me-2 ${styles.searchInput}`}
               type="search"
               placeholder="Search"
               aria-label="Search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <button className="btn btn-outline-success" type="submit">
+            <button
+              className={`btn btn-outline-success ${styles.searchButton}`}
+              type="submit"
+            >
               Search
             </button>
           </form>
-          <table className="table w-100" style={{ marginTop: "15px" }}>
+        </div>
+        <div className="row mt-3">
+          <table className={`table ${styles.userTable}`}>
             <thead>
               <tr>
-                <th scope="col">Id</th>
-                <th scope="col">userName</th>
-                <th scope="col">Avatar</th>
-                <th scope="col">Address</th>
-                <th scope="col">PhoneNumber</th>
-                <th scope="col">Sex</th>
-                <th scope="col">FullName</th>
-                <th scope="col">No</th>
-                <th scope="col">roles</th>
-                <th scope="col">PlaceofOrigin</th>
-                <th scope="col">PlaceofResidence</th>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Avatar</th>
+                <th>Address</th>
+                <th>Phone Number</th>
+                <th>Gender</th>
+                <th>Full Name</th>
+                <th>No</th>
+                <th>Role</th>
+                <th>Hometown</th>
+                <th>Current Address</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -83,12 +99,11 @@ function User() {
                   <td>{user._id}</td>
                   <td>{user.userName}</td>
                   <td>
-                    {" "}
                     {user.avatar && (
                       <img
                         src={user.avatar}
                         alt={`Avatar of ${user.userName}`}
-                        className="avatar"
+                        className={styles.avatar}
                       />
                     )}
                   </td>
@@ -100,6 +115,16 @@ function User() {
                   <td>{user.roles}</td>
                   <td>{user.cID.placeOfOrigin}</td>
                   <td>{user.cID.placeOfResidence}</td>
+                  <td>
+                    {!user.isBlocked && (
+                      <button
+                        className={`btn btn-danger btn-sm ${styles.blockButton}`}
+                        onClick={() => handleBlockUser(user._id)}
+                      >
+                        Block
+                      </button>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>

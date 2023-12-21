@@ -11,6 +11,7 @@ import Chat from "../components/chat";
 import RegisterPage from "../pages/Register";
 
 
+
 // import Host from "../admin/Host/Host";
 
 import Block from "../admin/Block/Block";
@@ -48,10 +49,9 @@ export default createBrowserRouter([
         path: "/",
       },
       {
-        element : <DescriptionPage/>,
-        path: "/description"
-      }
-    ,
+        element: <DescriptionPage />,
+        path: "/description",
+      },
       {
         element: <ProtectedRoute />,
         path: "/",
@@ -91,11 +91,11 @@ export default createBrowserRouter([
       },
       {
         element: <User />,
-        path: "/admin/user",
+        path: "/admin/list/user",
       },
       {
         element: <Block />,
-        path: "/admin/block",
+        path: "/admin/block/user",
       },
     ],
   },
