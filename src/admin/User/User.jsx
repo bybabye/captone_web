@@ -1,4 +1,4 @@
-import styles from "../Styles.module.css";
+import styles from "./styles.module.css";
 import Navbar from "../Navbar/Navbar";
 import { useEffect, useState } from "react";
 import Header from "../Header/Header";

@@ -1,4 +1,4 @@
-import "./styles.module1.css";
+import "./styles.module.css";
 import Navbar from "../Navbar/Navbar";
 import Header from "../Header/Header";
 function Home() {

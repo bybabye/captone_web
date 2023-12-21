@@ -31,7 +31,6 @@ import { Navigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthProvider";
 import app from "../../firebase/config";
 import { getAuth, signOut } from "firebase/auth";
-import DescriptionPage from "../Description";
 
 export default function HomePage() {
   const [homes, setHomes] = useState([]);
@@ -128,7 +127,7 @@ export default function HomePage() {
   }
 
   useEffect(() => {
-    // handleGetHomesData();
+     handleGetHomesData();
   }, []);
 
   useEffect(() => {

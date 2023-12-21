@@ -9,8 +9,6 @@ import AuthProvider from "../context/AuthProvider";
 import Messages from "../pages/Messages";
 import Chat from "../components/chat";
 import RegisterPage from "../pages/Register";
-import DescriptionPage from "../pages/Description";
-
 
 
 // import Host from "../admin/Host/Host";
@@ -50,11 +48,10 @@ export default createBrowserRouter([
         path: "/",
       },
       {
-        element: <DescriptionPage />,
-
-        path: "/:_id",
-
-      },
+        element : <DescriptionPage/>,
+        path: "/description"
+      }
+    ,
       {
         element: <ProtectedRoute />,
         path: "/",
@@ -94,11 +91,11 @@ export default createBrowserRouter([
       },
       {
         element: <User />,
-        path: "/admin/list/user",
+        path: "/admin/user",
       },
       {
         element: <Block />,
-        path: "/admin/block/user",
+        path: "/admin/block",
       },
     ],
   },

@@ -6,9 +6,9 @@ import {
   API_SERVER_LIST_USER,
   API_SERVER_GET_UNBLOCK_USER,
 } from "../../utils/contants";
-import styles from "../styles.module.css";
+import styles from "./styles.module.css";
 
-const Block = () => {
+function Block () {
   const [blockedUsers, setBlockedUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -129,6 +129,6 @@ const Block = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Block;

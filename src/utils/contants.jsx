@@ -1,6 +1,6 @@
-export const API_SERVER = "https://cap1.onrender.com";
+//export const API_SERVER = "https://cap1.onrender.com";
 
-//export const API_SERVER = "http://localhost:4000";
+export const API_SERVER = "http://localhost:4000";
 export const API_SERVER_ADD_USER = `${API_SERVER}/user/add`;
 export const API_SERVER_LOGIN_USER = `${API_SERVER}/user/login`;
 export const API_SERVER_LIST_USER = `${API_SERVER}/user/listUser`;
@@ -14,3 +14,4 @@ export const API_SERVER_SEND_MESSAGE_FOR_ID = `${API_SERVER}/chat/message/send`;
 export const API_SERVER_GET_GUEST_USER = `${API_SERVER}/chat/message`;
 export const API_SERVER_GET_REPORT_USER = `${API_SERVER}/admin/list/report`;
 export const API_SERVER_GET_BLOCK_USER = `${API_SERVER}/admin/block/user`;
+export const API_SERVER_GET_UNBLOCK_USER = `${API_SERVER}`;
