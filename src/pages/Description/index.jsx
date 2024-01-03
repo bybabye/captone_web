@@ -1,9 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styles from "./styles.module.css";
-
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import Header from "../../components/Header";
 import { apiRequest } from "../../utils/request";
 import {
