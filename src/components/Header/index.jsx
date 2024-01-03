@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { BiLogOut, BiMessageRounded, BiUserCircle } from "react-icons/bi";
 import { GrNotification } from "react-icons/gr";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,13 +9,17 @@ import app from "../../firebase/config";
 import { getAuth, signOut } from "firebase/auth";
 import { useState } from "react";
 import { BsPersonGear } from "react-icons/bs";
-
+import { CiHome } from "react-icons/ci";
+import { SiGoogletagmanager } from "react-icons/si";
 export default function Header({ user }) {
   const auth = getAuth(app);
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+  const handleGoHome = () => {
+    navigate("/");
   };
   const handleLogout = async () => {
     await signOut(auth);
@@ -24,17 +29,16 @@ export default function Header({ user }) {
     <div className={`${styles.menu}`}>
       <img src={logo} alt="IHML logo" />
       <div className={`${styles.menu_info}`}>
-        <div style={{ display: "flex" }}>
-          <div className={`${styles.link}`}>
-            <Link to={`/`}>Trang chủ</Link>
-          </div>
-          <div className={`${styles.link}`}>
-            <Link>Liên hệ</Link>
-          </div>
+        <div onClick={handleGoHome} className={`${styles.gohome}`}>
+          IHML your home{" "}
         </div>
         <div style={{ display: "flex", alignItems: "center" }}>
           {user && user._id != null ? (
-            <Dropdown show={isMenuOpen} onToggle={toggleMenu}>
+            <Dropdown
+              className={`${styles.dropdown}`}
+              show={isMenuOpen}
+              onToggle={toggleMenu}
+            >
               <img
                 onClick={toggleMenu}
                 className={`${styles.user_img}`}
@@ -42,6 +46,17 @@ export default function Header({ user }) {
                 alt="avatar"
               />
               <Dropdown.Menu>
+                <Dropdown.Item href="/home/login=true">
+                  <CiHome style={{ marginRight: "6px" }} fontSize={16} />
+                  Home Page
+                </Dropdown.Item>
+                { user.roles === "host" &&
+                  <Dropdown.Item href="/renal">
+                    <SiGoogletagmanager style={{ marginRight: "6px" }} fontSize={16}  />
+                  
+                  Manager Rental
+                </Dropdown.Item>
+                }
                 <Dropdown.Item href="/profile">
                   <BsPersonGear style={{ marginRight: "6px" }} fontSize={16} />
                   View Personal

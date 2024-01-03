@@ -68,10 +68,10 @@ export default function LoginPage() {
     <div>Loading</div>
   ) : (
     <div className={`${styles.wrapper}`}>
-      <Header user={null}/>
+      <Header user={null} />
       <div className={`${styles.layout}`}>
         <h1>Đăng nhập</h1>
-        <p className="text-input">Tên đăng nhập</p>
+        <p className="text-input">Email</p>
         <input
           value={email}
           onChange={(e) => {
@@ -92,21 +92,7 @@ export default function LoginPage() {
           name="matKhau"
           placeholder="******"
         ></input>
-        <h6>or continue with</h6>
-        {notifiError && (
-          <div style={{ color: "red" }}>{notifiError.message}</div>
-        )}
-        <div className={`${styles.social_buttons}`}>
-          <div
-            className={`${styles.google_button}`}
-            onClick={handleLoginWithGoogle}
-          >
-            <img src="./src/assets/google.png" alt="Google Icon" />
-          </div>
-          <div className={`${styles.facebook_button}`}>
-            <img src="./src/assets/meta.png" alt="Facebook Icon" />
-          </div>
-        </div>
+
         <div
           onClick={(e) => handleLoginWithGmailAndPassword(e)}
           style={{
@@ -117,9 +103,58 @@ export default function LoginPage() {
           <h5>Đăng nhập</h5>
         </div>
         <div className={`${styles.button}`}>
-          <Link to={"/register"} style={{ textDecoration: "none", color: "inherit" }}>
+          <Link
+            to={"/register"}
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
             <h5>Đăng ký</h5>
           </Link>
+        </div>
+        {notifiError && (
+          <div style={{ color: "red" }}>{notifiError.message}</div>
+        )}
+        <h1 style={{ color: "#7C838A" }}>- OR -</h1>
+
+        <div className={`${styles.social_buttons}`}>
+          {/* <div
+            className={`${styles.google_button}`}
+            onClick={handleLoginWithGoogle}
+          ></div> */}
+          <div
+            onClick={handleLoginWithGoogle}
+            style={{
+              width: "200px",
+              height: "45px",
+              borderRadius: "15px",
+              border: "1px #7C838A solid",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              margin : "12px"
+            }}
+          >
+            {" "}
+            <img src="./src/assets/google.png" alt="Google Icon" /> Login With
+            Google
+          </div>
+          <div
+            onClick={() => {}}
+            style={{
+              width: "200px",
+              height: "45px",
+              borderRadius: "15px",
+              border: "1px #7C838A solid",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              margin : "12px"
+            }}
+          >
+            {" "}
+            <img src="./src/assets/meta.png" alt="Facebook Icon" /> Login With
+            Facebook
+          </div>
+          <div className={`${styles.facebook_button}`}></div>
         </div>
       </div>
     </div>

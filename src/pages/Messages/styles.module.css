@@ -1,7 +1,7 @@
 /* styles.module.css */
 
 .wrapper {
-  height: auto;
+  height: 100vh;
   width: 100%;
   background-color: #fff;
   display: flex;
@@ -37,8 +37,9 @@
   padding: 12px;
   /* Increased padding for better spacing */
   cursor: pointer;
-  border-bottom: 1px solid #403c3c;
+  box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.06);
   padding-bottom: 5px;
+  padding-top: 5px;
   margin-bottom: 5px;
 }
 
@@ -60,7 +61,7 @@
 
 .receiver {
   color: rgb(62, 74, 148);
-  border: 1px solid rgb(62, 74, 148);
+ 
   border-radius: 8px;
   padding: 8px;
   margin-bottom: 8px;
@@ -70,3 +71,4 @@
   flex: 7;
   border-left: 2px solid #efefef;
 }
+

@@ -1,18 +1,25 @@
 import styles from "./styles.module.css";
 import { GrFavorite } from "react-icons/gr";
 import { CiLocationOn } from "react-icons/ci";
-import { Link } from "react-router-dom";
+
+import {  useNavigate } from "react-router-dom";
 export default function CustomCard({ homes }) {
+  const navigate = useNavigate();
+  const goToDescriptionPage = (homeId) => {
+    navigate(`/description/${homeId}`)
+  }
   return homes.map((home) => (
-    <div className={`${styles.card_item}`} key={home._id}>
-      <Link to={`/${home._id}`}><img
+   
+    <div onClick={() => goToDescriptionPage(home._id)} className={`${styles.card_item}`} key={home._id}>
+      <img
         src={
           home.images[0] ??
           "https://nhatro.duytan.edu.vn/Content/Home/images/image_logo.jpg"
         }
         alt="image"
         className={styles.card_item_img}
-      /></Link>
+      />
+      
       <div className={styles.card_item_description}>
         <div className={styles.card_item_info}>
           <h3>

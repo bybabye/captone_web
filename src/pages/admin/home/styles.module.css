@@ -1,0 +1,58 @@
+
+table {
+  width: 70%;
+  margin: 0 auto; /* Để căn giữa bảng */
+  border-collapse: collapse;
+}
+
+/* Thiết lập các cột và hàng */
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  white-space: nowrap; /* Ngăn chặn text tràn qua khỏi ô */
+  text-overflow: ellipsis; /* Hiển thị dấu ... khi nội dung quá dài */
+  margin-bottom: 1px; /* Khoảng cách giữa các dòng */
+}
+tr {
+  border-bottom: 2px solid #f5f6f8;
+}
+th,
+td {
+  background-color: #FFFFFF;
+}
+td {
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.13;
+     word-wrap: break-word;
+     color: #707683;
+}
+th {
+    color: #334D6E;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.13;
+    opacity: .5;
+}
+
+/* Đặc biệt áp dụng cho cột Avatar */
+td:nth-child(2) {
+  max-width: 50px; /* Đặt chiều rộng tối đa cho cột Avatar */
+}
+
+/* Đặc biệt áp dụng cho cột Actions */
+td:nth-child(11) {
+  max-width: 100px; /* Đặt chiều rộng tối đa cho cột Actions */
+}
+
+.des{
+    background-color: #14AE5C;
+    padding: 4px;
+    color: #fff;
+    border: 1px solid #fff;
+    border-radius: 6px;
+}
+.des:hover {
+    cursor: pointer;
+}

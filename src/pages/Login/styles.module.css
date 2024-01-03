@@ -7,15 +7,17 @@
 }
 
 .layout {
-    width: 400px; 
+    height: 600px;
+    width: 500px; 
     background: #fff;
     border: 1px solid #dddfe2;
     box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
     border-radius: 8px;
-    padding: 1rem;
+    padding: 24px;
     text-align: center;
     margin: 0 auto; /* Căn giữa form */
     display: flex;
+    justify-content: space-evenly;
     flex-direction: column;
     align-items: center;
 }
@@ -27,21 +29,24 @@
 .layout p {
     text-align: left; /* Align text to the left */
     margin: 0; /* Reset margin for <p> elements */
-    padding: 0.5rem 0.75rem;
+   
     width: 100%;
     margin-top: 10px;
-    font-size: 12px;
+    font-weight: 500;
+    font-size: 16px;
+    color: #7C838A;
 }
 
 .layout > input {
-    border-radius: 8px;
+    border-radius: 14px;
     border: 2px solid #dddfe2;
     outline: none;
-    color: #1d2129;
+    color: #000;
     margin: 0px 0px;
     padding: 0.5rem 0.75rem;
     width: 100%;
     font-size: 12px;
+    background-color: rgba(176, 186, 195, 0.40);
 }
 
 .layout h6{
@@ -54,7 +59,7 @@
 }
 
 .layout > .button {
-    width: 70%;
+    width: 50%;
     color: #fff;
     outline: none;
     padding-top: 13px;
@@ -76,7 +81,7 @@
     padding-top: -3px;
     display: flex; /* Sử dụng flexbox để xếp cạnh nhau */
 
-    justify-content: center; /* Canh giữa theo chiều ngang */
+    justify-content: space-between; /* Canh giữa theo chiều ngang */
     margin-top: 1rem;
 }
 

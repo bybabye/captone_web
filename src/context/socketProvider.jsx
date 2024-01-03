@@ -3,6 +3,7 @@ import io from 'socket.io-client';
 import { AuthContext } from './AuthProvider';
 export const SocketContext = createContext();
 
+// eslint-disable-next-line react/prop-types
 export default function SocketProvider({children}) {
     const socket = io.connect('http://localhost:8800');
     const { user } = useContext(AuthContext);
@@ -16,6 +17,7 @@ export default function SocketProvider({children}) {
         return () => {
             socket.disconnect();
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
     return (
         <SocketContext.Provider value={socket}>

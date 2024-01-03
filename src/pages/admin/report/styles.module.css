@@ -1,0 +1,83 @@
+.wrapper {
+  display: flex;
+}
+
+.report {
+  height: 700px;
+  width: 800px;
+  background-color: #fff;
+  margin-right: 20px;
+  padding: 20px;
+  box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.06);
+  border-radius: 4px;
+}
+
+.report_title {
+  font-size: 15px;
+  color: #192a3e;
+  font-weight: 500;
+  letter-spacing: 0.15;
+  word-wrap: break-word;
+  padding-bottom: 12px;
+  border-bottom: 1px #ebeff2 solid;
+}
+
+.report_card {
+  height: 160px;
+  width: 95%;
+  box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.06);
+  border-radius: 4px;
+  margin-top: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease; 
+}
+.report_card:hover {
+  cursor: pointer;
+  transform: scale(1.05); /* Scale up by 5% on hover */
+}
+.card_title {
+  font-size: 15px;
+  font-weight: 500;
+  color: #323c47;
+}
+.card_des {
+  color: #4c5862;
+  font-size: 13px;
+  font-weight: 400;
+}
+.card_des > p {
+  display: inline;
+  color: #4c5862;
+  font-size: 13px;
+  font-weight: 400;
+  opacity: 0.5;
+}
+.card_action {
+  display: flex;
+  justify-content: space-between;
+}
+.card_action_report {
+  border-radius: 4px;
+  width: 84px;
+  color: #fff;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 12px;
+}
+.card_action_report:hover {
+  cursor: pointer;
+}
+.report_container {
+  max-height: 600px;
+  padding : 12px;
+  overflow-y: scroll; /* Hiển thị thanh cuộn khi cần thiết */
+  scrollbar-width: thin; /* Đặt độ rộng của thanh cuộn */
+  scrollbar-color: transparent transparent; /* Màu của thanh cuộn (ở đây là màu trong suốt) */
+}
+.report_container::-webkit-scrollbar {
+    width: 2px; /* Độ rộng của thanh cuộn */
+  }

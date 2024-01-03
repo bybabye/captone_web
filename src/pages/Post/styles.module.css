@@ -1,0 +1,82 @@
+.wrapper{
+    margin-top: 80px;
+}
+
+.checkboxContainer {
+  margin-bottom: 10px;
+}
+
+
+
+.selectAllLabel {
+  font-weight: bold;
+  
+}
+.selectAllLabel > input {
+  margin-right: 10px;
+}
+.checkboxLabel  > input {
+  margin-right: 10px;
+}
+
+.imageContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.imageWrapper {
+  margin-right: 8px;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.deleteButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgb(67, 59, 59);
+  color: white;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalContent {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.imageContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.imageWrapper {
+  position: relative;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.deleteButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: red;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+}

@@ -1,0 +1,72 @@
+.wrapper {
+  display: flex;
+}
+
+.infomation {
+  height: 352px;
+  width: 460px;
+  background-color: #fff;
+  box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.06);
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.infomation_fullName {
+  color: #272727;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.infomation_des {
+  color: #4c5862;
+  font-size: 16px;
+  font-weight: 400;
+  margin-top: 10px;
+}
+.infomation_des > p {
+  display: inline;
+  color: #4c5862;
+  font-size: 16px;
+  font-weight: 500;
+  opacity: 0.5;
+}
+
+.content {
+  height: 700px;
+  width: 600px;
+  background-color: #fff;
+  box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.06);
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  padding: 20px;
+  justify-content: space-between;
+}
+.actions {
+  display: flex;
+  justify-content: space-between;
+}
+.actions_button {
+    height: 40px;
+    width: 84px;
+    background-color: #2ED47A;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    border-radius: 4px;
+}
+.block {
+    background-color: #F7685B;
+}
+.actions_button:hover {
+    cursor: pointer;
+}

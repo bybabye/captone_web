@@ -11,6 +11,7 @@ import { GrSend } from "react-icons/gr";
 import { SocketContext } from "../../context/socketProvider";
 import { AuthContext } from "../../context/AuthProvider";
 import { v4 as uuidv4 } from 'uuid';
+import moment from 'moment';
 export default function Chat() {
   
   const { messId } = useParams();
@@ -25,16 +26,17 @@ export default function Chat() {
   
   // lấy user trên thanh menu gồm avatar , name
   const handleGetGuestUser = async () => {
-    const {status , data : guest } = await apiRequest(
+    // eslint-disable-next-line no-unused-vars
+    const {status , data } = await apiRequest(
       null,
       "GET",
       `${API_SERVER_GET_GUEST_USER}?chatId=${messId}`,
       localStorage.getItem("accessToken")
     );
 
-    console.log(guest);
+    console.log(data);
 
-    setGuest(guest);
+    setGuest(data.guest);
   };
 
   // lấy đoạn chat trong database
@@ -44,13 +46,14 @@ export default function Chat() {
     try {
       setIsLoading(true)
       console.log(isLoading);
+      // eslint-disable-next-line no-unused-vars
       const {status , data } = await apiRequest(
         null,
         "GET",
         `${API_SERVER_GET_LIST_MESSAGES_FOR_ID}?chatId=${messId}`,
         localStorage.getItem("accessToken")
       );
-      setMessages(data);
+      setMessages(data.data);
     } catch (error) {
       console.log(error);
     } finally {
@@ -60,6 +63,7 @@ export default function Chat() {
   };
 
   const sendMessageForSocket = (content,id) => {
+    const currentDate = new Date();
     socket.emit('send-message',{
       'chatId': messId,
       'message': {
@@ -67,7 +71,7 @@ export default function Chat() {
         type : 'text',
         content : content,
         senderId : user._id,
-        sendTime : Date(),
+        sendTime : currentDate.toISOString(),
         chatId : messId,
       },
     })
@@ -79,6 +83,7 @@ export default function Chat() {
       setMessages(prevMessage => [...prevMessage,data.message])
       console.log(messages);
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
 
@@ -90,6 +95,7 @@ export default function Chat() {
 
     handleGetGuestUser();
     handleGetMessage();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messId]);
 
 
@@ -119,6 +125,7 @@ export default function Chat() {
       setMess('')
     }
   };
+  // keo xuong phan cuoi tin nhan
   useEffect(() => {
     if (messageListRef.current) {
       messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
@@ -162,7 +169,7 @@ export default function Chat() {
                     </div>
                   </div>
                   <div className={`${styles.message_sentTime}`}>
-                    {message.sentTime}
+                    {moment(message.sentTime).format('DD/MM/YYYY HH:mm:ss')}
                   </div>
                 </div>
               </div>

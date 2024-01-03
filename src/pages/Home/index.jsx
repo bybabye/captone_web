@@ -4,6 +4,7 @@ import { apiRequest } from "../../utils/request";
 import Dropdown from "react-bootstrap/Dropdown";
 import {
   API_SERVER_LIST_HOME,
+  API_SERVER_LIST_NOTIFICATION,
   API_SERVER_SEARCH_FOR_ADDRESS,
   API_SERVER_SEARCH_FOR_ROOMTYPE,
 } from "../../utils/contants";
@@ -15,11 +16,9 @@ import {
   BiMessageRounded,
   BiUserCircle,
   BiHomeAlt2,
-  BiLogOut
+  BiLogOut,
 } from "react-icons/bi";
-import {
-  BsPersonGear
-} from "react-icons/bs";
+import { BsPersonGear } from "react-icons/bs";
 
 import { GrNotification } from "react-icons/gr";
 import { MdPostAdd, MdApartment } from "react-icons/md";
@@ -31,7 +30,10 @@ import { Navigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthProvider";
 import app from "../../firebase/config";
 import { getAuth, signOut } from "firebase/auth";
-
+import CustomLoading from "../../components/CustomLoading";
+import Warning from "../../components/Warning/Warning";
+import moment from "moment";
+import { SiGoogletagmanager } from "react-icons/si";
 export default function HomePage() {
   const [homes, setHomes] = useState([]);
   const [address, setAddress] = useState([]);
@@ -39,31 +41,55 @@ export default function HomePage() {
   const [indexAddress, setIndexAddress] = useState(0);
   const [indexDistrict, setIndexDistrict] = useState(0);
   const [indexSubDistrict, setIndexSubDistrict] = useState(0);
+  const [notification, setNotification] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  //warning
+  const [status, setStatus] = useState(0);
+  const [message, setMessage] = useState("");
+  const [isActive, setIsActive] = useState(false);
   const auth = getAuth(app);
   const navigate = useNavigate();
 
   //user khi da dang nhap
   const { user } = useContext(AuthContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpenNotifi, setIsMenuOpenNotifi] = useState(false);
   //const [page, setPage] = useState(1);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-  
+  const toggleMenuNotifi = () => {
+    setIsMenuOpenNotifi(!isMenuOpenNotifi);
+  };
+
   const handleGetHomesData = async () => {
-    setIsLoading(true);
-    const {status , data} = await apiRequest(null, "GET", API_SERVER_LIST_HOME, null);
+    const { status, data } = await apiRequest(
+      null,
+      "GET",
+      API_SERVER_LIST_HOME,
+      null
+    );
 
     setHomes(data);
+    setIsLoading(false);
+  };
+  const handleGetNotification = async () => {
+    setIsLoading(true);
+    const { status, data } = await apiRequest(
+      null,
+      "GET",
+      API_SERVER_LIST_NOTIFICATION,
+      localStorage.getItem("accessToken")
+    );
+    setNotification(data.data);
+    console.log(data);
     setIsLoading(false);
   };
 
   const getAddressData = async () => {
     const response = await fetch("https://provinces.open-api.vn/api/?depth=3");
     const jsonData = await response.json();
-
     setAddress(jsonData);
     setPostAddress({
       city: jsonData[0].name,
@@ -88,7 +114,7 @@ export default function HomePage() {
     };
     console.log(json);
     setIsLoading(true);
-    const {status ,data} = await apiRequest(
+    const { status, data } = await apiRequest(
       null,
       "GET",
       `${API_SERVER_SEARCH_FOR_ADDRESS}?subDistrict=${
@@ -96,7 +122,7 @@ export default function HomePage() {
       }&district=${json.districts ?? "undefined"}&city=${json.city}`,
       null
     );
-     // Sử lý sự kiện khi status khác 200
+    // Sử lý sự kiện khi status khác 200
 
     setHomes(data);
     setIsLoading(false);
@@ -105,7 +131,7 @@ export default function HomePage() {
     setIsLoading(true);
 
     try {
-      const {status , data} = await apiRequest(
+      const { status, data } = await apiRequest(
         null,
         "GET",
         `${API_SERVER_SEARCH_FOR_ROOMTYPE}?roomType=${roomType}`,
@@ -123,18 +149,20 @@ export default function HomePage() {
   };
   const handleLogout = async () => {
     await signOut(auth);
-    navigate('/');
-  }
+    navigate("/");
+  };
 
   useEffect(() => {
-     handleGetHomesData();
+    handleGetHomesData();
   }, []);
-
+  useEffect(() => {
+    handleGetNotification();
+  }, []);
   useEffect(() => {
     getAddressData();
   }, []);
 
-  if (user && user.roles === 'admin') {
+  if (user && user.roles === "admin") {
     return <Navigate to="/admin" />;
   }
 
@@ -149,6 +177,12 @@ export default function HomePage() {
 
   return (
     <div className={`${styles.wrapper}`}>
+      <Warning
+        status={status}
+        message={message}
+        isActive={isActive}
+        onClose={() => setIsActive(false)}
+      />
       <div className={`${styles.menu}`}>
         <img src={logo} alt="IHML logo" />
         <div className={`${styles.menu_info}`}>
@@ -208,36 +242,93 @@ export default function HomePage() {
           </div>
 
           <div style={{ display: "flex", alignItems: "center" }}>
-            <GrNotification style={{ marginLeft: "24px" }} size={24} />
+            {user._id && (
+              <Dropdown show={isMenuOpenNotifi} onToggle={toggleMenuNotifi}>
+                <GrNotification
+                  onClick={toggleMenuNotifi}
+                  style={{ marginLeft: "24px" }}
+                  size={24}
+                />
+                <Dropdown.Menu>
+                  {notification &&
+                    notification.map((notifi) => (
+                      <Dropdown.Item key={notifi._id} href={`/rental/${notifi.targetId}`}>
+                        <div className={styles.notification}>
+                          <div
+                            style={{
+                              color: notifi.read ? "#000" : "#050505",
+                              fontWeight: notifi.read ? "400" : "600",
+                              fontSize: "15px",
+                            }}
+                          >
+                            {notifi.content}
+                          </div>
+                          <div>
+                            {moment(notifi.updatedAt).format(
+                              "DD/MM/YYYY HH:mm:ss"
+                            )}
+                          </div>
+                        </div>
+                      </Dropdown.Item>
+                    ))}
+                </Dropdown.Menu>
+              </Dropdown>
+            )}
+
             <Link to={`/message`}>
               <BiMessageRounded style={{ marginLeft: "12px" }} size={26} />
             </Link>
             {user._id != null ? (
               <Dropdown show={isMenuOpen} onToggle={toggleMenu}>
-                <img onClick={toggleMenu} className={`${styles.user_img}`} src={user.avatar} alt="avatar" />
+                <img
+                  onClick={toggleMenu}
+                  className={`${styles.user_img}`}
+                  src={user.avatar}
+                  alt="avatar"
+                />
                 <Dropdown.Menu>
                   <Dropdown.Item href="/profile">
-                  
-                  <BsPersonGear style={{marginRight : "6px"}} fontSize={16}/>
-                    View Personal</Dropdown.Item>
+                    <BsPersonGear
+                      style={{ marginRight: "6px" }}
+                      fontSize={16}
+                    />
+                    View Personal
+                  </Dropdown.Item>
+                  {user.roles === "host" && (
+                    <Dropdown.Item href="/rental">
+                      <SiGoogletagmanager
+                        style={{ marginRight: "6px" }}
+                        fontSize={16}
+                      />
+                      Manager Rental
+                    </Dropdown.Item>
+                  )}
                   <Dropdown.Item href="#" onClick={handleLogout}>
-                    <BiLogOut style={{marginRight : "6px"}} fontSize={16}/>
+                    <BiLogOut style={{ marginRight: "6px" }} fontSize={16} />
                     Logout
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             ) : (
               <Link to={`/login`}>
-              <BiUserCircle
-                style={{ marginLeft: "12px", marginRight: "12px" }}
-                size={26}
-              />
+                <BiUserCircle
+                  style={{ marginLeft: "12px", marginRight: "12px" }}
+                  size={26}
+                />
               </Link>
             )}
 
             <button
               className={`${styles.menu_info_button}`}
-              onClick={handleSearchHomeForAddress}
+              onClick={() => {
+                if (user.roles === "host") {
+                  navigate("/post");
+                } else {
+                  setStatus(0);
+                  setMessage("Bạn cần điền đầy đủ thông tin để trở thành host");
+                  setIsActive(true);
+                }
+              }}
             >
               <MdPostAdd color="#fff" />
               <p>Đăng tin</p>
@@ -257,7 +348,7 @@ export default function HomePage() {
             handleSearchHomeForRoomType(3)
           )}
         </div>
-        {isLoading ? <div>Loading</div> : <CustomCard homes={homes} />}
+        {isLoading ? <div>loading</div> : <CustomCard homes={homes} />}
       </div>
     </div>
   );
