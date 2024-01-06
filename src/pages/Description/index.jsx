@@ -23,6 +23,7 @@ import moment from "moment";
 import CustomLoading from "../../components/CustomLoading";
 import { useNavigate } from "react-router-dom";
 import ReportPage from "../Report";
+
 /*https://cap1.onrender.com/home?postId=64fec5432cd31a07815c0aca */
 export default function DescriptionPage() {
   const [newComment, setNewComment] = useState("");
@@ -38,7 +39,7 @@ export default function DescriptionPage() {
   //lay param la 1 id cua san pham
   const { homeId } = useParams();
   // report
-  const [show,setShow] = useState(false);
+  const [show, setShow] = useState(false);
 
   //
   const { user } = useContext(AuthContext);
@@ -96,8 +97,13 @@ export default function DescriptionPage() {
         localStorage.getItem("accessToken")
       );
       setIsLoading(false);
+      setStatus(status);
+      setMessage(data.message);
+      setIsActive(true);
 
-      navigate(`/`);
+      // setTimeout(() => {
+      //   navigate(`/`);
+      // }, 1000);
     }
   };
   const handleAddComment = async () => {
@@ -109,6 +115,7 @@ export default function DescriptionPage() {
       `${API_SERVER_ADDCOMMENT_FOR_ID}${homeId}`,
       localStorage.getItem("accessToken")
     );
+    
     console.log(status, data);
     setNewComment("");
     setStatus(status);
@@ -130,6 +137,15 @@ export default function DescriptionPage() {
     setChooseImage(data.images[0]);
     setIsLoading(false);
   };
+  // const sendNotificationForSocket = () => {
+  //   const currentDate = new Date();
+  //   socket.emit('send-notification',{
+  //     'receiverId': user.uid,
+  //     'targetId': null,
+  //     'target' : null,
+  //     'content' : "abcxyz"
+  //   })
+  // }
 
   useEffect(() => {
     handleSearchHomeForId();
@@ -146,13 +162,13 @@ export default function DescriptionPage() {
         isActive={isActive}
         onClose={() => setIsActive(false)}
       />
-      <ReportPage homeId={homeId} show={show} onClose={() => setShow(false) }/>
+      <ReportPage homeId={homeId} show={show} onClose={() => setShow(false)} />
       <Header user={user} />
 
       {/* <img
-          src="https://scontent.fdad3-5.fna.fbcdn.net/v/t1.6435-9/60882175_1292921530883531_6196144495243821056_n.jpg?_nc_cat=102&cb=99be929b-8d691acd&ccb=1-7&_nc_sid=7a1959&_nc_ohc=0GBy325uN3AAX-9POfw&_nc_ht=scontent.fdad3-5.fna&oh=00_AfB98r7WufrwSjUszsVrrFqA5Mi9Nea3FZN4oWtLFA9e2g&oe=65B42AB1"
-          alt="Image 2"
-        /> */}
+        src="https://scontent.fdad3-5.fna.fbcdn.net/v/t1.6435-9/60882175_1292921530883531_6196144495243821056_n.jpg?_nc_cat=102&cb=99be929b-8d691acd&ccb=1-7&_nc_sid=7a1959&_nc_ohc=0GBy325uN3AAX-9POfw&_nc_ht=scontent.fdad3-5.fna&oh=00_AfB98r7WufrwSjUszsVrrFqA5Mi9Nea3FZN4oWtLFA9e2g&oe=65B42AB1"
+        alt="Image 2"
+      /> */}
 
       <div className={styles.contentContainer}>
         <div className={styles.descriptionContainer}>
@@ -210,13 +226,14 @@ export default function DescriptionPage() {
                       </div>
                       <div
                         className={styles.commentButton}
+                        // onClick={handleAddRental}
                         onClick={handleAddRental}
                       >
                         Thuê phòng
                       </div>
                       <div
                         className={styles.commentButton}
-                        onClick={() =>  setShow(true)}
+                        onClick={() => setShow(true)}
                       >
                         Báo cáo
                       </div>

@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams ,useNavigate} from "react-router-dom";
-import { API_SERVER_GET_RENTAL_FOR_ID, API_SERVER_RENTAL_CONFIRM } from "../../utils/contants";
+import { API_SERVER_ADD_NOTIFICATION, API_SERVER_GET_RENTAL_FOR_ID, API_SERVER_RENTAL_CONFIRM } from "../../utils/contants";
 import { apiRequest } from "../../utils/request";
 import styles from "./styles.module.css";
 // icon from react icon
@@ -10,11 +10,13 @@ import { CiHome } from "react-icons/ci";
 import moment from "moment";
 import CircleAvatar from "../../components/CircleAvatar";
 import Warning from "../../components/Warning/Warning";
+import { AuthContext } from "../../context/AuthProvider";
 export default function Contact() {
   const { rentalId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [chooseImage, setChooseImage] = useState("");
   const [rental, setRental] = useState(false);
+  const {user} = useContext(AuthContext);
   // warning
  const [status, setStatus] = useState(0);
  const [message, setMessage] = useState("");
@@ -25,6 +27,17 @@ export default function Contact() {
         null,
         "PATCH",
         `${API_SERVER_RENTAL_CONFIRM}${rentalId}`,
+        localStorage.getItem("accessToken")
+      );
+      await apiRequest(
+        {
+          receiverId: rental.tenantId._id,
+          target: "rental",
+          targetId: rentalId,
+          content: `${user.userName} xác nhận bạn đã thuê nhà của họ`,
+        },
+        "POST",
+        `${API_SERVER_ADD_NOTIFICATION}`,
         localStorage.getItem("accessToken")
       );
       setStatus(status);
@@ -51,6 +64,7 @@ export default function Contact() {
   };
   useEffect(() => {
     handleGetRentalForId();
+
   }, []);
   return (
     <>

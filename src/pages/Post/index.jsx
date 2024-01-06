@@ -71,22 +71,33 @@ export default function PostPage() {
 
   const handleValuation = async () => {
     const utilities = selectedFurniture.map((index) => furnitureOptions[index]);
-    const { status, data } = await apiRequest(
-      {
-        area: area,
-        roomType: "tro",
-        utilities: utilities,
-        status: furnitureStatus,
-      },
-      "POST",
-      `${API_SERVER_VALUATION}`,
-      null
-    );
-    setStatus(status);
-    setMessage(`IHMLMarket gợi ý cho bạn là với giá là : ${Math.floor(data.data)/1000} triệu VND`);
-    setIsActive(true);
-    setRentPrice(Math.floor(data.data)/1000);
-    console.log(status, data);
+
+    try {
+      const { status, data } = await apiRequest(
+        {
+          area: area,
+          roomType: "tro",
+          utilities: utilities,
+          status: furnitureStatus,
+        },
+        "POST",
+        `${API_SERVER_VALUATION}`,
+        null
+      );
+      setStatus(status);
+      setMessage(
+        `IHMLMarket gợi ý cho bạn là với giá là : ${
+          Math.floor(data.data) / 1000
+        } triệu VND`
+      );
+      setIsActive(true);
+      setRentPrice(Math.floor(data.data) / 1000);
+      console.log(status, data);
+    } catch (error) {
+      setStatus(0);
+      setMessage(`Bạn cần nhập đủ điều kiện`);
+      setIsActive(true);
+    }
   };
   const handleImageUpload = (event) => {
     const files = event.target.files;
@@ -241,260 +252,266 @@ export default function PostPage() {
       setStatus(status);
       setMessage(data.message);
       setIsActive(true);
-      setIsLoading(false);
+      
       navigate("/");
     }
+    setIsLoading(false);
   };
 
   return isLoading ? (
     <div>Loading</div>
   ) : (
-    <><Warning
-    isActive={isActive}
-    message={message}
-    status={status}
-    onClose={() => setIsActive(false)}
-    
-  />
-  <div className={`${styles.wrapper} container`}>
-      <Header user={user} />
-      
-      <h1>Đăng tin</h1>
-      <div className="row">
-        <div className="col-sm-4 mt-4">
-          <label htmlFor="fileInput">
-            <label htmlFor="exampleFormControlSelect1">Hình ảnh</label>
-            <div className={`${styles.camera_button}`}>
-              <CiCamera size={30} />
-            </div>
-            <input
-              id="fileInput"
-              type="file"
-              name="images"
-              accept="image/*"
-              style={{ display: "none" }}
-              onChange={handleImageUpload}
-              multiple
-            />
-          </label>
-          {images.length > 0 && (
-            <div>
-              <h3 style={{ marginTop: "10px", fontSize: "15px" }}>
-                Ảnh đã thêm:
-              </h3>
-              <div className={styles.imageContainer}>
-                {images.map((image, index) => (
-                  <div key={index} className={styles.imageWrapper}>
-                    <img
-                      src={image.imageUrl}
-                      alt={`Image ${index}`}
-                      style={{
-                        width: "100px",
-                        height: "100px",
-                        objectFit: "cover",
-                      }}
-                    />
-                    <button
-                      className={styles.deleteButton}
-                      onClick={() => handleImageDelete(index)}
-                    >
-                      x
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-        <div className="col-sm-8">
-          <form>
-            <div className="form-group mt-4">
-              <label htmlFor="exampleFormControlSelect1">
-                Doanh mục đăng tin
-              </label>
-              <select
-                className="form-control"
-                id="exampleFormControlSelect1"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              >
-                <option>Nhà Trọ & Phòng Trọ</option>
-                <option>Nhà Nguyên Căn</option>
-                <option>Chung Cư</option>
-              </select>
-            </div>
-            <div className="form-group mt-4">
-              <label htmlFor="exampleFormControlInput1">Địa chỉ</label>
-              <input
-                type="text"
-                className="form-control"
-                id="exampleFormControlInput1"
-                placeholder="Đường 2 tháng 9, Hải Châu I, Đà Nẵng"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-              />
-            </div>
+    <>
+      <Warning
+        isActive={isActive}
+        message={message}
+        status={status}
+        onClose={() => setIsActive(false)}
+      />
+      <div className={`${styles.wrapper} container`}>
+        <Header user={user} />
 
-            <div className="form-group mt-4">
-              <label htmlFor="validationServer03">Diện tích </label>
+        <h1>Đăng tin</h1>
+        <div className="row">
+          <div className="col-sm-4 mt-4">
+            <label htmlFor="fileInput">
+              <label htmlFor="exampleFormControlSelect1">Hình ảnh</label>
+              <div className={`${styles.camera_button}`}>
+                <CiCamera size={30} />
+              </div>
               <input
-                type="number"
-                className="form-control is-invalid"
-                id="validationServer03"
-                placeholder="Diện tích"
-                required
-                value={area}
-                onChange={(e) => setArea(e.target.value)}
+                id="fileInput"
+                type="file"
+                name="images"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={handleImageUpload}
+                multiple
               />
-              <div className="invalid-feedback">Vui lòng nhập diện tích</div>
+            </label>
+            {images.length > 0 && (
+              <div>
+                <h3 style={{ marginTop: "10px", fontSize: "15px" }}>
+                  Ảnh đã thêm:
+                </h3>
+                <div className={styles.imageContainer}>
+                  {images.map((image, index) => (
+                    <div key={index} className={styles.imageWrapper}>
+                      <img
+                        src={image.imageUrl}
+                        alt={`Image ${index}`}
+                        style={{
+                          width: "100px",
+                          height: "100px",
+                          objectFit: "cover",
+                        }}
+                      />
+                      <button
+                        className={styles.deleteButton}
+                        onClick={() => handleImageDelete(index)}
+                      >
+                        x
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="col-sm-8">
+            <form>
               <div className="form-group mt-4">
                 <label htmlFor="exampleFormControlSelect1">
-                  Tình trạng phòng
+                  Doanh mục đăng tin
                 </label>
                 <select
                   className="form-control"
                   id="exampleFormControlSelect1"
-                  value={furnitureStatus}
-                  onChange={(e) => setFurnitureStatus(parseInt(e.target.value))}
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
                 >
-                  <option value={0}>Cũ</option>
-                  <option value={1}>Mới</option>
+                  <option>Nhà Trọ & Phòng Trọ</option>
+                  <option>Nhà Nguyên Căn</option>
+                  <option>Chung Cư</option>
                 </select>
               </div>
-              {/* check box*/}
-              <div className={styles.checkboxContainer}>
-                <label className={styles.selectAllLabel}>
-                  <input
-                    type="checkbox"
-                    checked={selectAll}
-                    onChange={handleSelectAllChange}
-                  />
-                  Nội thất đầy đủ
-                </label>
-                <br />
-                {Object.entries(furnitureOptions).map(([key, value]) => (
-                  <div key={key}>
-                    <label className={styles.checkboxLabel}>
-                      <input
-                        type="checkbox"
-                        checked={selectAll || selectedFurniture.includes(value)}
-                        onChange={() => handleCheckboxChange(value)}
-                      />
-                      {value}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="form-group mt-4">
-              <input
-                type="number"
-                className="form-control is-invalid"
-                id="validationServer04"
-                placeholder="Giá cho thuê(VND)"
-                required
-                value={rentPrice}
-                onChange={(e) => setRentPrice(e.target.value)}
-              />
-              <div className="invalid-feedback">Vui lòng nhập giá cho thuê</div>
-            </div>
-            <div className="form-group mt-4">
-              <textarea
-                className="form-control"
-                id="exampleFormControlTextarea1"
-                rows="3"
-                placeholder="Mô tả chi tiết. Nên có: Loại phòng trọ, vị trí, diện tích, tình trạng,..."
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              ></textarea>
-            </div>
-          </form>
-        </div>
-        <div className="d-flex justify-content-center mt-4">
-          <button
-            type="button"
-            className="btn btn-secondary btn-lg px-5 mx-2"
-            onClick={handlePreviewClick}
-          >
-            Xem trước
-          </button>
-          <button
-            type="button"
-            className="btn btn-secondary btn-lg px-5 mx-2"
-            onClick={handleValuation}
-          >
-            Định giá
-          </button>
-          <button
-            type="button"
-            className="btn btn-primary btn-lg px-5 mx-2"
-            onClick={handleSubmit}
-          >
-            Đăng tin
-          </button>
-        </div>
-      </div>
-
-      {/* Preview Modal */}
-      <Modal show={showPreviewModal} onHide={handleClosePreviewModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Xem trước</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <h5>Hình ảnh đã tải lên:</h5>
-          <div className={styles.imageContainer}>
-            {images.map((image, index) => (
-              <div key={index} className={styles.imageWrapper}>
-                <img
-                  src={image.imageUrl}
-                  alt={`Image ${index}`}
-                  style={{
-                    width: "100px",
-                    height: "100px",
-                    objectFit: "cover",
-                  }}
+              <div className="form-group mt-4">
+                <label htmlFor="exampleFormControlInput1">Địa chỉ</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="exampleFormControlInput1"
+                  placeholder="Đường 2 tháng 9, Hải Châu I, Đà Nẵng"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
                 />
-                <button
-                  className={styles.deleteButton}
-                  onClick={() => handleImageDelete(index)}
-                >
-                  x
-                </button>
               </div>
-            ))}
+
+              <div className="form-group mt-4">
+                <label htmlFor="validationServer03">Diện tích </label>
+                <input
+                  type="number"
+                  className="form-control is-invalid"
+                  id="validationServer03"
+                  placeholder="Diện tích"
+                  required
+                  value={area}
+                  onChange={(e) => setArea(e.target.value)}
+                />
+                <div className="invalid-feedback">Vui lòng nhập diện tích</div>
+                <div className="form-group mt-4">
+                  <label htmlFor="exampleFormControlSelect1">
+                    Tình trạng phòng
+                  </label>
+                  <select
+                    className="form-control"
+                    id="exampleFormControlSelect1"
+                    value={furnitureStatus}
+                    onChange={(e) =>
+                      setFurnitureStatus(parseInt(e.target.value))
+                    }
+                  >
+                    <option value={0}>Cũ</option>
+                    <option value={1}>Mới</option>
+                  </select>
+                </div>
+                {/* check box*/}
+                <div className={styles.checkboxContainer}>
+                  <label className={styles.selectAllLabel}>
+                    <input
+                      type="checkbox"
+                      checked={selectAll}
+                      onChange={handleSelectAllChange}
+                    />
+                    Nội thất đầy đủ
+                  </label>
+                  <br />
+                  {Object.entries(furnitureOptions).map(([key, value]) => (
+                    <div key={key}>
+                      <label className={styles.checkboxLabel}>
+                        <input
+                          type="checkbox"
+                          checked={
+                            selectAll || selectedFurniture.includes(value)
+                          }
+                          onChange={() => handleCheckboxChange(value)}
+                        />
+                        {value}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="form-group mt-4">
+                <input
+                  type="number"
+                  className="form-control is-invalid"
+                  id="validationServer04"
+                  placeholder="Giá cho thuê(VND)"
+                  required
+                  value={rentPrice}
+                  onChange={(e) => setRentPrice(e.target.value)}
+                />
+                <div className="invalid-feedback">
+                  Vui lòng nhập giá cho thuê
+                </div>
+              </div>
+              <div className="form-group mt-4">
+                <textarea
+                  className="form-control"
+                  id="exampleFormControlTextarea1"
+                  rows="3"
+                  placeholder="Mô tả chi tiết. Nên có: Loại phòng trọ, vị trí, diện tích, tình trạng,..."
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                ></textarea>
+              </div>
+            </form>
           </div>
+          <div className="d-flex justify-content-center mt-4">
+            <button
+              type="button"
+              className="btn btn-secondary btn-lg px-5 mx-2"
+              onClick={handlePreviewClick}
+            >
+              Xem trước
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary btn-lg px-5 mx-2"
+              onClick={handleValuation}
+            >
+              Gợi ý giá
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary btn-lg px-5 mx-2"
+              onClick={handleSubmit}
+            >
+              Đăng tin
+            </button>
+          </div>
+        </div>
 
-          <h5>Thông tin liên quan:</h5>
-          <ul>
-            <li>
-              Doanh mục đăng tin: <strong>{category}</strong>
-            </li>
-            <li>
-              Địa chỉ: <strong>{address}</strong>
-            </li>
-            <li>
-              Tinh trạng nội thất: <strong>{furnitureStatus}</strong>
-            </li>
-            <li>
-              Diện tích: <strong>{area}</strong>
-            </li>
-            <li>
-              Giá cho thuê: <strong>{rentPrice}</strong>
-            </li>
+        {/* Preview Modal */}
+        <Modal show={showPreviewModal} onHide={handleClosePreviewModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Xem trước</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <h5>Hình ảnh đã tải lên:</h5>
+            <div className={styles.imageContainer}>
+              {images.map((image, index) => (
+                <div key={index} className={styles.imageWrapper}>
+                  <img
+                    src={image.imageUrl}
+                    alt={`Image ${index}`}
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      objectFit: "cover",
+                    }}
+                  />
+                  <button
+                    className={styles.deleteButton}
+                    onClick={() => handleImageDelete(index)}
+                  >
+                    x
+                  </button>
+                </div>
+              ))}
+            </div>
 
-            <li>
-              Mô tả chi tiết: <strong>{description}</strong>
-            </li>
-          </ul>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClosePreviewModal}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </div>
-  </>
-    
+            <h5>Thông tin liên quan:</h5>
+            <ul>
+              <li>
+                Doanh mục đăng tin: <strong>{category}</strong>
+              </li>
+              <li>
+                Địa chỉ: <strong>{address}</strong>
+              </li>
+              <li>
+                Tinh trạng nội thất: <strong>{furnitureStatus}</strong>
+              </li>
+              <li>
+                Diện tích: <strong>{area}</strong>
+              </li>
+              <li>
+                Giá cho thuê: <strong>{rentPrice}</strong>
+              </li>
+
+              <li>
+                Mô tả chi tiết: <strong>{description}</strong>
+              </li>
+            </ul>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClosePreviewModal}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
+    </>
   );
 }

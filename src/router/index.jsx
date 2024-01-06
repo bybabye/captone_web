@@ -22,6 +22,7 @@ import ReportAdminPage from "../pages/admin/report";
 import ReportPage from "../pages/Report";
 import InfomationUser from "../pages/admin/InfomationUser";
 import InfomationReport from "../pages/admin/InfomationReport";
+import SocketProvider from "../context/socketProvider";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function AuthLayout() {
@@ -49,7 +50,11 @@ export default createBrowserRouter([
       },
 
       {
-        element: <HomePage />,
+        element: (
+          <SocketProvider>
+            <HomePage />
+          </SocketProvider>
+        ),
         path: "/",
       },
       {
@@ -63,24 +68,24 @@ export default createBrowserRouter([
           {
             element: <AdminPage />,
             path: "/admin",
-            children : [
+            children: [
               {
-                element : <HomePageAdmin/>,
+                element: <HomePageAdmin />,
                 path: "/admin",
               },
               {
-                element : <InfomationUser/>,
-                path: "/admin/:id"
+                element: <InfomationUser />,
+                path: "/admin/:id",
               },
               {
-                element : <ReportAdminPage/>,
+                element: <ReportAdminPage />,
                 path: "/admin/report",
               },
               {
-                element : <InfomationReport/>,
-                path: "/admin/report/:id"
+                element: <InfomationReport />,
+                path: "/admin/report/:id",
               },
-            ]
+            ],
           },
         ],
       },
